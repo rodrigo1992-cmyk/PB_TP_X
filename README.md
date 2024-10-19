@@ -8,7 +8,7 @@
 
 #### Implementação de Interface de Usuário Dinâmica:
   * Evolua a interface inicial da sua aplicação Streamlit, acrescentando elementos de interatividade que permitam ações dinâmicas por parte do usuário. A interface deve ser intuitiva e funcional, garantindo uma boa experiência de uso.
-
+  
 
 #### Extração de Conteúdo da Web para alimentar a aplicação:
   * Utilize a ferramenta Beautiful Soup para extrair conteúdo de páginas web. Execute esses códigos separadamente e armazene os dados obtidos em arquivos CSV e/ou TXT nos diretórios de data/.
