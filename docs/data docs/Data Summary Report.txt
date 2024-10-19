@@ -1,28 +1,45 @@
 -----------DATA SUMMARY REPORT----------
+"id_vaga","","titulo_vaga","titulo_resumo","faixa_salarial","empresa_contratante","estado","cidade","url","descricao","beneficios","regimeContrato"
 
-FONTE: www.linkedin.com/jobs/search?
+FONTE: https://www.catho.com.br/vagas/{cargo}/?page={page}
 
-CAMPO: Título da Vaga
+CAMPO: id_vaga
+    TIPO: Integer
+    OBJETIVO DE USO: Identificação do ID da vaga dentro do site do Catho
+
+CAMPO: data_anuncio
+    TIPO: Date
+    OBJETIVO DE USO: Realizar análises de tendência temporal
+
+CAMPO: titulo_vaga
     TIPO: String
     OBJETIVO DE USO: Auxiliar na identificação do nível da Vaga
 
-CAMPO: Data Publicação da Vaga
+CAMPO: titulo_resumo
     TIPO: String
-    OBJETIVO DE USO: Realizar análises de tendência temporal
+    OBJETIVO DE USO: Título normalizado fornecido pelo site, pode facilitar a análise.
 
-CAMPO: EMPRESA
+CAMPO: faixa_salarial
     TIPO: String
-    OBJETIVO DE USO: Informação extra (desejável) para filtros no dashboard
+    OBJETIVO DE USO: Precisa ser tratado para virar valores numéricos. Servirá para comparar sênioridade x salário ou requisitos x salário
 
-CAMPO: UF
+CAMPO: empresa_contratante
     TIPO: String
-    OBJETIVO DE USO: Informação extra (desejável) para filtros no dashboard
+    OBJETIVO DE USO: filtros no dashboard
 
-CAMPO: LINK DA VAGA 
+CAMPO: estado
+    TIPO: String
+    OBJETIVO DE USO: filtros no dashboard
+
+CAMPO: cidade
+    TIPO: String
+    OBJETIVO DE USO: filtros no dashboard
+
+CAMPO: url
     TIPO: String
     OBJETIVO DE USO: URL Necessário apra acessar o detalhamento da Vaga
 
-CAMPO: DESCRIÇÃO DA VAGA 
+CAMPO: descricao
     TIPO: String
     OBJETIVO DE USO: Necessário para que o modelo de LLM consiga obter as funções e requisitos
 
@@ -33,3 +50,11 @@ CAMPO: FUNÇÕES (CONTEÚDO GERADO PELO MODELO LLM)
 CAMPO: REQUISITOS (CONTEÚDO GERADO PELO MODELO LLM)
     TIPO: String
     OBJETIVO DE USO: Informação principal, necessário para identificar os conhecimentos exigidos pelas empresas.
+
+CAMPO: regimeContrato
+    TIPO: String
+    OBJETIVO DE USO: Separar na análise, pois contratações CLT ou PJ podem ter grande variação salarial.
+
+CAMPO: beneficios
+    TIPO: String
+    OBJETIVO DE USO: Informação extra

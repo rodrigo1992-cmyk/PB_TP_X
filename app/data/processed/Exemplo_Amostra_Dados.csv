@@ -1,6 +1,4 @@
-TITULO_VAGA,DT_VAGA,EMPRESA,UF,LINK_VAGA,DESC_VAGA,FUNCOES,REQUISITOS
-"Cientista de Dados Júnior","2024-08-01","Empresa A","SP","https:linkedin.com/jobs/12324534","Análise de dados e suporte em projetos de ciência de dados.","Análise exploratória de dados, Limpeza de dados","Python, SQL, Estatística básica"
-"Cientista de Dados ","2024-08-05","Empresa B","RJ","https:linkedin.com/jobs/12324534","Desenvolvimento de modelos preditivos e análise de dados.","Criação de modelos, Análise de resultados","Python, R, Machine Learning"
-"Cientista de Dados Sr","2024-08-10","Empresa C","MG","https:linkedin.com/jobs/12324534","Liderar projetos de ciência de dados e mentorizar a equipe.","Gestão de projetos, Desenvolvimento de soluções","Python, SQL, Big Data, Machine Learning avançado"
-"Cientista de Dados Sênior","2024-08-15","Empresa D","RS","https:linkedin.com/jobs/12324534","Suporte na análise de dados e visualização de informações.","Visualização de dados, Relatórios","Python, Tableau, Estatística"
-"Cientista de Dados Pleno","2024-08-20","Empresa E","BA","https:linkedin.com/jobs/12324534","Análise de dados e implementação de modelos preditivos.","Desenvolvimento de modelos, Análise de dados","Python, R, Machine Learning, SQL"
+"id_vaga","data_anuncio","titulo_vaga","titulo_resumo","faixa_salarial","empresa_contratante","estado","cidade","url","descricao","beneficios","regimeContrato"
+"30077919","2024-08-16T23:59:59Z","Analista de Dados - Júnior","analista-de-dados-junior","não disponível","CARTÃO DE TODOS","MG","Ipatinga","/vagas/analista-de-dados-junior/30077919/","Exemplo Descrição","['Seguro Saúde', 'Assistência Médica / Medicina em grupo']","CLT (Efetivo)"
+"30045699","2024-08-21T23:59:59Z","Cientista de Dados Sênior","cientista-de-dados-senior","não disponível","DECISION","SP","São Paulo","/vagas/cientista-de-dados-senior/30045699/","Exemplo Descrição","[]",""
+"30600767","2024-10-07T23:59:59Z","Analista de Dados em Excel","analista-de-dados-em-excel","não disponível","JETER CONSULTING","SP","São Paulo","/vagas/analista-de-dados-em-excel/30600767/","Exemplo Descrição","['Convênio com Farmácia', 'Vale Transporte']","CLT (Efetivo)"
