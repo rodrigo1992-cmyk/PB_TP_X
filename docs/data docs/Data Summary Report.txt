@@ -1,0 +1,35 @@
+-----------DATA SUMMARY REPORT----------
+
+FONTE: www.linkedin.com/jobs/search?
+
+CAMPO: Título da Vaga
+    TIPO: String
+    OBJETIVO DE USO: Auxiliar na identificação do nível da Vaga
+
+CAMPO: Data Publicação da Vaga
+    TIPO: String
+    OBJETIVO DE USO: Realizar análises de tendência temporal
+
+CAMPO: EMPRESA
+    TIPO: String
+    OBJETIVO DE USO: Informação extra (desejável) para filtros no dashboard
+
+CAMPO: UF
+    TIPO: String
+    OBJETIVO DE USO: Informação extra (desejável) para filtros no dashboard
+
+CAMPO: LINK DA VAGA 
+    TIPO: String
+    OBJETIVO DE USO: URL Necessário apra acessar o detalhamento da Vaga
+
+CAMPO: DESCRIÇÃO DA VAGA 
+    TIPO: String
+    OBJETIVO DE USO: Necessário para que o modelo de LLM consiga obter as funções e requisitos
+
+CAMPO: FUNÇÕES (CONTEÚDO GERADO PELO MODELO LLM)
+    TIPO: String
+    OBJETIVO DE USO: Desejável para agrupar vagas com perfis semelhantes
+
+CAMPO: REQUISITOS (CONTEÚDO GERADO PELO MODELO LLM)
+    TIPO: String
+    OBJETIVO DE USO: Informação principal, necessário para identificar os conhecimentos exigidos pelas empresas.

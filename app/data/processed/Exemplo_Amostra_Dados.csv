@@ -1,0 +1,6 @@
+TITULO_VAGA,DT_VAGA,EMPRESA,UF,LINK_VAGA,DESC_VAGA,FUNCOES,REQUISITOS
+"Cientista de Dados Júnior","2024-08-01","Empresa A","SP","https:linkedin.com/jobs/12324534","Análise de dados e suporte em projetos de ciência de dados.","Análise exploratória de dados, Limpeza de dados","Python, SQL, Estatística básica"
+"Cientista de Dados ","2024-08-05","Empresa B","RJ","https:linkedin.com/jobs/12324534","Desenvolvimento de modelos preditivos e análise de dados.","Criação de modelos, Análise de resultados","Python, R, Machine Learning"
+"Cientista de Dados Sr","2024-08-10","Empresa C","MG","https:linkedin.com/jobs/12324534","Liderar projetos de ciência de dados e mentorizar a equipe.","Gestão de projetos, Desenvolvimento de soluções","Python, SQL, Big Data, Machine Learning avançado"
+"Cientista de Dados Sênior","2024-08-15","Empresa D","RS","https:linkedin.com/jobs/12324534","Suporte na análise de dados e visualização de informações.","Visualização de dados, Relatórios","Python, Tableau, Estatística"
+"Cientista de Dados Pleno","2024-08-20","Empresa E","BA","https:linkedin.com/jobs/12324534","Análise de dados e implementação de modelos preditivos.","Desenvolvimento de modelos, Análise de dados","Python, R, Machine Learning, SQL"
