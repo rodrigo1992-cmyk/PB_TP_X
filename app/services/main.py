@@ -1,5 +1,8 @@
-from app.services.functions_webscrapping import *
-from app.services.functions_dataPreProcessing import *
+import sys
+sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X')
+
+from functions_webscrapping import *
+from functions_dataPreProcessing import *
 from app.router.paths import *
 
 dic_paths = dic_paths()
