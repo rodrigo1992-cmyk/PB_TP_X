@@ -8,6 +8,10 @@ requests = "*"
 bs4 = "*"
 pandas = "*"
 streamlit = "*"
+matplotlib = "*"
+nbformat = "*"
+plotly = "*"
+wordcloud = "*"
 
 [dev-packages]
 ipykernel = "*"
