@@ -1,13 +1,13 @@
 
 import streamlit as st
 import pandas as pd
-from utils import *
+from app.streamlit.utils import *
+from app.router.paths import *
 
 st.set_page_config(layout="wide")
 
 #-------------Define caminho dos arquivos----------------
-path_vagas = r'app\data\processed\vagas_norm.csv'
-
+path_df_vagas_norm, path_df_reqs = rotas()
 
 
 #-------------Importa todos os DFs necessários----------------
