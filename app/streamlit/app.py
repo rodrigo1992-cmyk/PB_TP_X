@@ -1,17 +1,19 @@
+import sys
+sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X')
+from app.router.paths import *
 
 import streamlit as st
 import pandas as pd
-from app.streamlit.utils import *
-from app.router.paths import *
+from utils import *
+
+dic_paths = dic_paths()
+
 
 st.set_page_config(layout="wide")
 
-#-------------Define caminho dos arquivos----------------
-path_df_vagas_norm, path_df_reqs = rotas()
-
 
 #-------------Importa todos os DFs necessários----------------
-df_vagas = import_df_vagas(path_vagas)
+df_vagas = import_df_vagas(dic_paths['csv_vagas_norm'])
 
 
 

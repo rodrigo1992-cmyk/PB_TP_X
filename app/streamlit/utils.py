@@ -1,8 +1,7 @@
-
 import streamlit as st
 import pandas as pd
 
-@st.cache
+@st.cache_data
 def import_df_vagas(path_vagas):
     df_vagas = pd.read_csv(path_vagas)
     return df_vagas
