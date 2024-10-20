@@ -1,6 +1,5 @@
 from app.services.functions_webscrapping import *
 from app.services.functions_dataPreProcessing import *
-
 from app.router.paths import *
 
 dic_paths = dic_paths()
