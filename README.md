@@ -1,8 +1,6 @@
--------------RESUMO DAS ENTREGAS--------
-
 # RESPOSTAS ao TP2
 ## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X
-## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py", ou acessar: 
+## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py": 
 
 #### Configuração do Ambiente de Desenvolvimento:
   * Configure seu ambiente de desenvolvimento, incluindo Git para controle de versão e preparação para deploy. Lembre-se de seguir a estrutura do CRISP-DM para organizar seu projeto de forma eficiente e escalável.
