@@ -1,6 +1,9 @@
 -------------RESUMO DAS ENTREGAS--------
 
 # RESPOSTAS ao TP2
+## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X
+## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py", ou acessar: 
+
 #### Configuração do Ambiente de Desenvolvimento:
   * Configure seu ambiente de desenvolvimento, incluindo Git para controle de versão e preparação para deploy. Lembre-se de seguir a estrutura do CRISP-DM para organizar seu projeto de forma eficiente e escalável.
   
@@ -8,7 +11,8 @@
 
 #### Implementação de Interface de Usuário Dinâmica:
   * Evolua a interface inicial da sua aplicação Streamlit, acrescentando elementos de interatividade que permitam ações dinâmicas por parte do usuário. A interface deve ser intuitiva e funcional, garantindo uma boa experiência de uso.
-  
+    
+  >> Adicionada Barra lateral para filtros e navegação entre páginas
 
 #### Extração de Conteúdo da Web para alimentar a aplicação:
   * Utilize a ferramenta Beautiful Soup para extrair conteúdo de páginas web. Execute esses códigos separadamente e armazene os dados obtidos em arquivos CSV e/ou TXT nos diretórios de data/.
@@ -23,12 +27,20 @@
 
   * Posteriormente, utilize esses dados para alimentar a interface da aplicação: exiba informações relevantes geradas a partir do conteúdo obtido, como nuvens de palavras e estatísticas básicas (tabelas, notícias).
   
+  >> Implementado na página "Análise Perfis Profissionais"
+  
 #### Cache e Estado de Sessão:
   * Implemente cache e estado de sessão em Streamlit para melhorar a performance da aplicação e garantir a persistência dos dados em aplicações interativas. Isso permitirá que os dados sejam mantidos ao longo das interações do usuário, proporcionando uma experiência mais fluida
+  
+  >> O Cache foi utilizado na função que carrega o principal e maior dataframe, o df_vagas.
+  >> O estado de sessão foi utilizado para armazenamento dos dataframes em "variáveis globais" e para manter os filtros selecionados mesmo após troca de página. 
   
 #### Serviço de Upload e Download de Arquivos:
   * Desenvolva um serviço de upload e download de arquivos em Streamlit, permitindo que o usuário adicione mais informações ao sistema através de arquivos CSV. Esses dados devem complementar as informações já exibidas na aplicação, tornando-a mais robusta e informativa.
   
+  >> Utilizado para que o usuário possa realizar uma carga manual com mais anúncios de vagas. Implementado na página "Visualizar Vagas". Por enquanto está sem retenção.
+  
 #### Finalização do Project Charter e Data Summary Report:
   * Complete o Project Charter e o Data Summary Report, detalhando o escopo, os objetivos, os stakeholders do projeto, e as fontes de dados utilizadas. 
-  >> Os documentosn estão em "docs\bussiness docs\Project Charter.png" e "docs\data docs\Data Summary Report.txt"
+
+>> Os documentosn estão em "docs\bussiness docs\Project Charter.png" e "docs\data docs\Data Summary Report.txt"

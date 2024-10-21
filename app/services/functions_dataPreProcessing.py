@@ -119,4 +119,4 @@ def Pre_Processamento_Df_Requisitos(path_csv_lista_ferramentas, path_csv_vagas, 
             requisitos.append([id_vaga, tool])
 
     df_requisitos = pd.DataFrame(requisitos, columns=['id_vaga', 'tool'])
-    df_requisitos.to_csv(path_csv_requisitos)
+    df_requisitos.to_csv(path_csv_requisitos, index=False)

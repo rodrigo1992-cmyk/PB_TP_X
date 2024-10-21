@@ -2,9 +2,35 @@ import streamlit as st
 import pandas as pd
 
 @st.cache_data
-def import_df_vagas(path_vagas):
-    df_vagas = pd.read_csv(path_vagas)
-    return df_vagas
+def import_df(path):
+    df = pd.read_csv(path)
+    return df
+
+def filtrar_df_vagas(df_vagas: pd.DataFrame, filtro_perfil: str, filtro_nivel: str, filtro_uf: str, filtro_empresa: str):
+
+    #Filtro o dataframe de vagas
+    df = df_vagas.copy()
+    if filtro_perfil != 'Selecione':
+        df = df[df['perfil_vaga'] == filtro_perfil]
+    if filtro_nivel != 'Selecione':
+        df = df[df['nivel_cargo'] == filtro_nivel]
+    if filtro_uf != 'Selecione':
+        df = df[df['estado'] == filtro_uf]
+    if filtro_empresa != 'Selecione':
+        df = df[df['empresa_contratante'] == filtro_empresa]
+    return df
+
+def filtrar_df_vagas_ternario(df_vagas: pd.DataFrame, filtro_nivel: str, filtro_uf: str, filtro_empresa: str):
+
+    #Filtro o dataframe de vagas
+    df = df_vagas.copy()
+    if filtro_nivel != 'Selecione':
+        df = df[df['nivel_cargo'] == filtro_nivel]
+    if filtro_uf != 'Selecione':
+        df = df[df['estado'] == filtro_uf]
+    if filtro_empresa != 'Selecione':
+        df = df[df['empresa_contratante'] == filtro_empresa]
+    return df
 
 def filtros_barra_lateral(lista_vagas: list, lista_nivel: list, lista_uf: list, lista_empresa: list):
 
