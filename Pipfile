@@ -12,6 +12,8 @@ matplotlib = "*"
 nbformat = "*"
 plotly = "*"
 wordcloud = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 ipykernel = "*"
