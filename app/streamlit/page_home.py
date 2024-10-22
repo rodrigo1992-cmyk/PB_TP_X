@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from utils import *
 
 def exibir():
     st.title("Radar de Vagas DS")
@@ -18,5 +19,3 @@ def exibir():
 
     df = pd.read_csv(r'app\data\processed\Exemplo_Amostra_Dados.csv')
     st.dataframe(df)
-
-

@@ -45,7 +45,6 @@ def plot_dist_senioridade(df):
     args:
         df: usar o dataframe vagas_norm
     '''
-
     df = df.groupby(['perfil_vaga', 'nivel_cargo']).agg(count=('salario', 'size'), media_salario=('salario', 'mean')).reset_index()
     #converter a média salarial para int, exceto o que for nan
     df['media_salario'] = df['media_salario'].apply(lambda x: int(x) if not np.isnan(x) else x)

@@ -1,4 +1,4 @@
-from app.router.paths import dic_paths
+from app.router.paths import *
 
 import streamlit as st
 import pandas as pd
@@ -9,10 +9,8 @@ st.set_page_config(layout="wide")
 
 
 #-------------Importa todos os DFs necessários----------------
-dic_paths = dic_paths()
-
-st.session_state.df_vagas = import_df(dic_paths['csv_vagas_norm'])
-st.session_state.df_requisitos = import_df(dic_paths['csv_requisitos'])
+st.session_state.df_vagas = api_get_file_vagas_norm()
+st.session_state.df_requisitos = api_get_file_requisitos()
 
 
 #-------------Cria as variáveis necessárias para os filtros----------------

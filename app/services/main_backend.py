@@ -3,9 +3,11 @@ sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X')
 
 from functions_webscrapping import *
 from functions_dataPreProcessing import *
-from app.router.paths import *
+from app.router.paths import * #Apontar para o meu arquivo de rotas, que irá conter as funções de API
+from fastapi import FastAPI
+import uvicorn
 
-dic_paths = dic_paths()
+dic_paths = dicionario_paths()
 
 def webscrapping():
     lista_cargos = ['cientista-de-dados', 'analista-de-dados', 'engenheiro-de-dados', 'analista-bi']
@@ -33,7 +35,12 @@ def dataPreProcessing():
     Pre_Processamento_Df_Requisitos(dic_paths['csv_lista_ferramentas'], dic_paths['csv_vagas'], dic_paths['csv_requisitos'])
 
 
+#-----------------------EXECUÇÃO-----------------------
+app = FastAPI()
+app.include_router(router)
+
+#Estão comentadas as funções de webscrapping e dataPreProcessing para não serem executadas toda vez que o código for rodado
 if __name__ == "__main__":
     #webscrapping()
-    dataPreProcessing()
-
+    #dataPreProcessing()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
