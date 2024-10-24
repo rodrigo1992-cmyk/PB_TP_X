@@ -1,44 +1,49 @@
-# RESPOSTAS ao TP2
-## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X
-## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py": 
+# RESPOSTAS ao TP3
+## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/tree/PB_TP3
+## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py"
+## Para subir o servidor com uvicorn, executar o arquivo "app\services\main_backend.py"
 
-#### Configuração do Ambiente de Desenvolvimento:
-  * Configure seu ambiente de desenvolvimento, incluindo Git para controle de versão e preparação para deploy. Lembre-se de seguir a estrutura do CRISP-DM para organizar seu projeto de forma eficiente e escalável.
+#### Revisão e Atualização da Documentação:
+  * Revise o Project Charter e o Data Summary Report, atualizando a documentação para refletir as novas funcionalidades e decisões tomadas nesta fase do projeto.
+  * Reavalie o problema de negócio à luz das novas ferramentas (como FastAPI e Selenium) e ajuste suas metas, se necessário.
+  * Atualize a descrição das fontes de dados utilizadas, considerando possíveis novas fontes obtidas com scraping dinâmico.
   
-  >> Substituí a utilização do CondaEnv pelo PipEnv, "docs\bussiness docs\PipEnv.png"
+  >> Não houve necessidade de revisão.
 
-#### Implementação de Interface de Usuário Dinâmica:
-  * Evolua a interface inicial da sua aplicação Streamlit, acrescentando elementos de interatividade que permitam ações dinâmicas por parte do usuário. A interface deve ser intuitiva e funcional, garantindo uma boa experiência de uso.
+#### Criação de uma Aplicação com Múltiplas Páginas:
+  * Evolua a interface da sua aplicação em Streamlit, implementando múltiplas páginas e um menu de navegação que permita ao usuário transitar facilmente entre diferentes seções da aplicação.
+  * Cada página deve representar uma funcionalidade ou análise diferente, como a visualização de dados, gráficos interativos, upload/download de arquivos ou estatísticas geradas a partir dos dados coletados.
     
-  >> Adicionada Barra lateral para filtros e navegação entre páginas
+  >> Critérios já atendidos na entrega do TP2.
 
-#### Extração de Conteúdo da Web para alimentar a aplicação:
-  * Utilize a ferramenta Beautiful Soup para extrair conteúdo de páginas web. Execute esses códigos separadamente e armazene os dados obtidos em arquivos CSV e/ou TXT nos diretórios de data/.
+#### Extração de Dados de Páginas Dinâmicas (Web Scraping):
+  * Utilize o Selenium para realizar o web scraping de páginas dinâmicas, se necessário. Caso seu projeto utilize uma fonte de dados que exija interação com elementos dinâmicos (como formulários ou carregamentos assíncronos), o Selenium será essencial. Observação: Se não houver necessidade de utilizar Selenium, concentre-se no aprimoramento dos dados coletados com Beautiful Soup ou APIs, mantendo a simplicidade quando possível.
+  * Armazene os dados obtidos em arquivos CSV ou TXT, organizando-os no diretório de data/ para uso na aplicação.
   
-  >> O Projeto inicialmente previa a raspagem do Linkedin, porém a página estava me bloqueando ao tentar realizar as iterações. Também tentei no Indeed e no Vagas.com, sem sucesso. Creio que com o Sellenium conseguiria, porém como o requisito era fazer com BeautifulSoup só consegui no site da Catho, e obtive bons resultados, raspando 420 páginas.
+  >> Critérios já atendidos na entrega do TP2. Não foi necessário o uso do Selenium, pois consegui com o BS.
+  
+#### Desenvolvimento de APIs com FastAPI:
+  * Configure o ambiente de desenvolvimento para a criação de APIs com FastAPI.
+  * Crie uma API simples com rotas e endpoints que permitam interagir com os dados da aplicação. Exemplo de funcionalidades da API:
+    * Consulta de dados (GET)
+    * Envio de novos dados (POST)
+  * Implemente ao menos duas rotas em sua API, e documente-as adequadamente, explicando sua função e como elas podem ser usadas para interação com os dados.
+  
+  >> Implementado o GET para obter os 2 datasets principais, e o POST para que o usuário possa carregar novas vagas. Verificar arquivos a seguir:
+  >> * Iniciar o servidor: app/services/main_backend.py
+  >> * Definição das APIs no back-end: app/router/paths.py
+  >> * Definição das APIs no front-end: app/streamlit/utils.py
+  >> * Uso das APIs no front-end: app/streamlit/app_streamlit.py  e  app/streamlit/page_vagas.py
+  
+#### Preparação para Uso de Inteligência Artificial com LLMs:
+  * Nesta etapa, comece a pensar nos dados que você coletou até agora e como eles podem ser utilizados em tarefas baseadas em LLMs nas próximas entregas.
+  * Considere os tipos de dados disponíveis e as possíveis aplicações com LLMs, como:
+    * Análise de Texto Gerado: Usar os dados coletados para gerar resumos automáticos de textos longos, facilitando a compreensão e análise de documentos.
+    * Classificação de Sentimentos: Aplicar um modelo de LLM para classificar os sentimentos em textos (positivos, negativos ou neutros) coletados de notícias, redes sociais, ou outras fontes.
+    * Perguntas e Respostas (Q&A): Usar um LLM para construir um sistema de perguntas e respostas a partir dos dados disponíveis, respondendo a perguntas relevantes com base nos conteúdos coletados.
+Geração de Texto: Automatizar a criação de relatórios ou insights com base nos dados brutos, utilizando LLMs para gerar textos descritivos.
+  * Mantenha o foco na preparação do projeto para que, na próxima etapa, as funcionalidades de IA via LLM sejam facilmente integradas e aplicadas a esses cenários.
 
-  >> O Site da Catho possui menos vagas anunciadas, tendo poucas para cientista de dados. Em vista disso expandi o propósito do projeto para profissionais de dados em geral, raspando vagas de Cientistas de Dados, Engenheiros de Dados e Analistas de Dados.
-
-  >> No notebook "webscrapping.ipynb" primeiro foi feito foi criado e testado o código célula por célula, somente depois encapsulei em funções, criando o arquivo functions_webscrapping.py.
-
-  >> Por último mudei a forma de obter os dados, invés de buscar as tags individuais, que não tinham classes ou ids claros, busquei a div "props" e depois tratei como um Json para resgatar cada campo dentro da div.
-
-  * Posteriormente, utilize esses dados para alimentar a interface da aplicação: exiba informações relevantes geradas a partir do conteúdo obtido, como nuvens de palavras e estatísticas básicas (tabelas, notícias).
-  
-  >> Implementado na página "Análise Perfis Profissionais"
-  
-#### Cache e Estado de Sessão:
-  * Implemente cache e estado de sessão em Streamlit para melhorar a performance da aplicação e garantir a persistência dos dados em aplicações interativas. Isso permitirá que os dados sejam mantidos ao longo das interações do usuário, proporcionando uma experiência mais fluida
-  
-  >> O Cache foi utilizado na função que carrega o principal e maior dataframe, o df_vagas.
-  >> O estado de sessão foi utilizado para armazenamento dos dataframes em "variáveis globais" e para manter os filtros selecionados mesmo após troca de página. 
-  
-#### Serviço de Upload e Download de Arquivos:
-  * Desenvolva um serviço de upload e download de arquivos em Streamlit, permitindo que o usuário adicione mais informações ao sistema através de arquivos CSV. Esses dados devem complementar as informações já exibidas na aplicação, tornando-a mais robusta e informativa.
-  
-  >> Utilizado para que o usuário possa realizar uma carga manual com mais anúncios de vagas. Implementado na página "Visualizar Vagas". Por enquanto está sem retenção.
-  
-#### Finalização do Project Charter e Data Summary Report:
-  * Complete o Project Charter e o Data Summary Report, detalhando o escopo, os objetivos, os stakeholders do projeto, e as fontes de dados utilizadas. 
-
->> Os documentosn estão em "docs\bussiness docs\Project Charter.png" e "docs\data docs\Data Summary Report.txt"
+>> Inicialmente, criei de forma manual a lista de hard-skills a serem buscados nas descrições das vagas (arquivo "ferramentas.csv"). Na próxima etapa utilizarei o LLM para criar a lista de forma automática a partir da análise das descrições das vagas. Creio que o resultado será melhor pois irá encontrar ferramentas não listadas originalmente e variações de escrita.
+>> Utilizarei o LLM para criar diferentes categorias de vagas de acordo com a análise das funções contidas nas descrições.
+>> Utilizarei o LLM para que o usuário possa fazer uma adequação automática do seu currículo, para maior adesão às vagas que ele selecionar.
