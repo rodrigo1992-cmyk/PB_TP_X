@@ -1,6 +1,6 @@
 # RESPOSTAS ao TP3
 ## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/tree/PB_TP3
-## Para visualizar no Streamlit, executar arquivo "app\streamlit\app_streamlit.py"
+## Para visualizar no Streamlit, executar arquivo "app\pages\app_streamlit.py"
 ## Para subir o servidor com uvicorn, executar o arquivo "app\services\main_backend.py"
 
 #### Revisão e Atualização da Documentação:
@@ -32,8 +32,8 @@
   >> Implementado o GET para obter os 2 datasets principais, e o POST para que o usuário possa carregar novas vagas. Verificar arquivos a seguir:
   >> * Iniciar o servidor: app/services/main_backend.py
   >> * Definição das APIs no back-end: app/router/paths.py
-  >> * Definição das APIs no front-end: app/streamlit/utils.py
-  >> * Uso das APIs no front-end: app/streamlit/app_streamlit.py  e  app/streamlit/page_vagas.py
+  >> * Definição das APIs no front-end: app/pages/utils.py
+  >> * Uso das APIs no front-end: app/pages/app_streamlit.py  e  app/pages/page_vagas.py
   
 #### Preparação para Uso de Inteligência Artificial com LLMs:
   * Nesta etapa, comece a pensar nos dados que você coletou até agora e como eles podem ser utilizados em tarefas baseadas em LLMs nas próximas entregas.
