@@ -8,6 +8,11 @@ import time
 import os
 import re
 import json
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from datetime import datetime, timezone
+
+
 
 def obter_paginas_de_busca(lista_cargos, range_max):
     """
@@ -230,3 +235,119 @@ def iterar_htmls_e_extrair_dados(links_path, htmls_folder_path, path_csv_resulta
         df.to_csv(path_csv_resultado, index=False, quoting=1, encoding='utf-8')
 
     return df
+
+
+def raspas_paginas_e_salvar_links_indeed(lista_cargos, path_csv_links_indeed):
+
+    driver = webdriver.Firefox()
+    links =[]
+
+    for cargo in lista_cargos:    
+        for page_start in range(0,21,10):
+            driver.get(f"https://br.indeed.com/jobs?q={cargo}&start={page_start}")
+            time.sleep(random.uniform(3, 7))
+                
+            try:
+                botao_buscar = driver.find_element(By.CSS_SELECTOR, "button[aria-label=fechar]")
+                botao_buscar.click()
+            except:
+                pass
+
+            #Coleta todas as tags contidas dentro de cada card
+            div_vagas = driver.find_elements(By.CSS_SELECTOR, "div.job_seen_beacon")
+
+            #Itera sobre cada card para coletar as informações
+            for vaga in div_vagas:
+                link_vaga = vaga.find_element(By.CSS_SELECTOR, "a.jcs-JobTitle").get_attribute('href')
+                links.append(link_vaga)
+
+    #Removo links duplicados
+    links = list(set(links))
+
+    #gravar a lista de links em um arquivo csv
+    df = pd.DataFrame(links)
+    df.to_csv(path_csv_links_indeed, index=False, header=False)
+
+
+
+
+
+
+
+
+def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_resultado_indeed):
+
+    with open(path_csv_links_indeed, 'r') as file:
+        links = file.read().splitlines()
+        
+    df = pd.DataFrame(columns=['id_vaga', 'data_anuncio', 'titulo_vaga', 'titulo_resumo', 'faixa_salarial', 'empresa_contratante', 'estado', 'cidade', 'url', 'descricao', 'beneficios', 'regimeContrato'])
+
+    driver = webdriver.Firefox()
+
+    for i, url in enumerate(links[0:5]):
+        time.sleep(random.uniform(0, 5))
+        driver.get(url)
+
+        script_element_xpath = driver.find_element(By.XPATH, '/html/body/script[1]')
+
+        # Obtém o conteúdo do elemento
+        script_content_xpath = script_element_xpath.get_attribute('innerHTML')
+
+        script_content = script_content_xpath
+
+        # Regex para capturar o JSON dentro de window._initialData
+        match = re.search(r'window\._initialData\s*=\s*({.*?});', script_content, re.DOTALL)
+
+
+        if match:
+            json_str = match.group(1)
+            try:
+                # Converte a string para um objeto JSON
+                data = json.loads(json_str)
+
+                # Extrai os campos desejados        
+                data_job = data['hostQueryExecutionResult']['data']['jobData']['results'][0]['job']
+                id_vaga = data_job['key']
+                dt = int(data_job['datePublished']) / 1000
+                dt = datetime.fromtimestamp(dt, tz=timezone.utc)
+                data_anuncio = dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+                titulo_vaga = data_job['title']
+                titulo_resumo = data_job['normalizedTitle']
+                faixa_salarial_min = data['jobInfoWrapperModel']['jobInfoModel']['jobInfoHeaderModel']['salaryMin']
+                faixa_salarial_max = data['jobInfoWrapperModel']['jobInfoModel']['jobInfoHeaderModel']['salaryMax']
+                faixa_salarial = f'R${faixa_salarial_min} - R${faixa_salarial_max}'
+                empresa_contratante = data_job['sourceEmployerName']
+                estado = data_job['location']['admin1Code']
+                cidade = data_job['location']['city']
+                #url = 
+                descricao_html = data_job['description']['html']
+                descricao_soup = BeautifulSoup(descricao_html, 'html.parser')
+                descricao = descricao_soup.get_text(separator='\n', strip=True)
+                #beneficios =
+                #regime_contrato = 
+
+                nova_linha = pd.DataFrame([{
+                    "id_vaga": id_vaga,
+                    "data_anuncio": data_anuncio,
+                    "titulo_vaga": titulo_vaga,
+                    "titulo_resumo": titulo_resumo,
+                    "faixa_salarial": faixa_salarial,
+                    "empresa_contratante": empresa_contratante,
+                    "estado": estado,
+                    "cidade": cidade,
+                    "url": url,
+                    "descricao": descricao,
+                    "beneficios": None,
+                    "regimeContrato": None
+                }])
+
+                df = pd.concat([df, nova_linha], ignore_index=True)
+
+            except:
+                print(f'Erro na iteração: {i}')
+                    
+        else:
+            print("JSON não encontrado no script.")
+
+    df.to_csv(path_csv_resultado_indeed, index=False, quoting=1, encoding='utf-8')

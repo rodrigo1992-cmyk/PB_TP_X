@@ -15,6 +15,7 @@ wordcloud = "*"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
+selenium = "*"
 
 [dev-packages]
 ipykernel = "*"

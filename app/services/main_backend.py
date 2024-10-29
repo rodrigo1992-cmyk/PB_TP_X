@@ -9,7 +9,7 @@ import uvicorn
 
 dic_paths = dicionario_paths()
 
-def webscrapping():
+def webscrapping_catho():
     lista_cargos = ['cientista-de-dados', 'analista-de-dados', 'engenheiro-de-dados', 'analista-bi']
     
     #Realiza o request nas páginas de busca para cada cargo na lista_cargos, até o máximo de 11 páginas por cargo
@@ -29,6 +29,12 @@ def webscrapping():
     #Confere a quantidade de parses com sucesso
     print(df_final.shape)
 
+def webscrapping_indeed():
+    lista_cargos = ['cientista+de+dados', 'analista+de+dados', 'engenheiro+de+dados', 'analista+bi']
+    
+    raspas_paginas_e_salvar_links_indeed(lista_cargos, dic_paths['csv_links_indeed'])
+    iterar_paginas_e_extrair_dados_indeed(dic_paths['csv_links_indeed'], dic_paths['csv_resultado_indeed'])
+
 def dataPreProcessing():
 
     Pre_Processamento_Df_Vagas(dic_paths['csv_vagas'], dic_paths['csv_vagas_norm'])
@@ -41,6 +47,7 @@ app.include_router(router)
 
 #Estão comentadas as funções de webscrapping e dataPreProcessing para não serem executadas toda vez que o código for rodado
 if __name__ == "__main__":
-    #webscrapping()
+    #webscrapping_catho()
+    #webscrapping_indeed()
     #dataPreProcessing()
     uvicorn.run(app, host="0.0.0.0", port=8000)

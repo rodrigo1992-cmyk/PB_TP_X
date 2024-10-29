@@ -17,7 +17,9 @@ def dicionario_paths():
         'csv_vagas': os.path.join(BASE_DIR, r'app\data\raw\vagas.csv'),
         'csv_vagas_norm': os.path.join(BASE_DIR, r'app\data\processed\vagas_norm.csv'),
         'csv_lista_ferramentas': os.path.join(BASE_DIR, r'app\data\processed\ferramentas.csv'),
-        'csv_requisitos': os.path.join(BASE_DIR, r'app\data\processed\requisitos.csv')
+        'csv_requisitos': os.path.join(BASE_DIR, r'app\data\processed\requisitos.csv'),
+        'csv_links_indeed' : os.path.join(BASE_DIR, r'app\data\raw\links_vagas_indeed.csv'),
+        'csv_resultado_indeed' : os.path.join(BASE_DIR, r'app\data\raw\vagas_indeed.csv')
     }
     return dic_paths
 
