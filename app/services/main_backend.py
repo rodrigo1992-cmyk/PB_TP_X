@@ -32,13 +32,15 @@ def webscrapping_catho():
 def webscrapping_indeed():
     lista_cargos = ['cientista+de+dados', 'analista+de+dados', 'engenheiro+de+dados', 'analista+bi']
     
-    raspas_paginas_e_salvar_links_indeed(lista_cargos, dic_paths['csv_links_indeed'])
-    iterar_paginas_e_extrair_dados_indeed(dic_paths['csv_links_indeed'], dic_paths['csv_resultado_indeed'])
+    #Os intervalos são de 10 em 10, então de 0 a 21 serãoexecutadas 3 iterações (0, 10 e 20)
+    #raspas_paginas_e_salvar_links_indeed(lista_cargos, dic_paths['csv_links_indeed'], start_range=30, end_range=51)
+    iterar_paginas_e_extrair_dados_indeed(dic_paths['csv_links_indeed'], dic_paths['csv_vagas_indeed'], start_iter= 0, end_iter=361)
 
 def dataPreProcessing():
 
+    Juntar_datasets_vagas(dic_paths['csv_vagas_catho'], dic_paths['csv_vagas_indeed'], dic_paths['csv_vagas'])
     Pre_Processamento_Df_Vagas(dic_paths['csv_vagas'], dic_paths['csv_vagas_norm'])
-    Pre_Processamento_Df_Requisitos(dic_paths['csv_lista_ferramentas'], dic_paths['csv_vagas'], dic_paths['csv_requisitos'])
+    Pre_Processamento_Df_Requisitos(dic_paths['csv_lista_ferramentas'], dic_paths['csv_vagas_norm'], dic_paths['csv_requisitos'])
 
 
 #-----------------------EXECUÇÃO-----------------------
@@ -49,5 +51,5 @@ app.include_router(router)
 if __name__ == "__main__":
     #webscrapping_catho()
     #webscrapping_indeed()
-    #dataPreProcessing()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    dataPreProcessing()
+    #uvicorn.run(app, host="0.0.0.0", port=8000)

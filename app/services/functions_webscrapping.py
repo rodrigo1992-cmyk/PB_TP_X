@@ -228,6 +228,7 @@ def iterar_htmls_e_extrair_dados(links_path, htmls_folder_path, path_csv_resulta
                 }])
 
                 df = pd.concat([df, nova_linha], ignore_index=True)
+                
 
             except:
                 print(f'Erro na iteração: {row_file}')
@@ -237,13 +238,13 @@ def iterar_htmls_e_extrair_dados(links_path, htmls_folder_path, path_csv_resulta
     return df
 
 
-def raspas_paginas_e_salvar_links_indeed(lista_cargos, path_csv_links_indeed):
+def raspas_paginas_e_salvar_links_indeed(lista_cargos, path_csv_links_indeed, start_range, end_range):
 
     driver = webdriver.Firefox()
     links =[]
 
     for cargo in lista_cargos:    
-        for page_start in range(0,21,10):
+        for page_start in range(start_range,end_range,10):
             driver.get(f"https://br.indeed.com/jobs?q={cargo}&start={page_start}")
             time.sleep(random.uniform(3, 7))
                 
@@ -266,7 +267,7 @@ def raspas_paginas_e_salvar_links_indeed(lista_cargos, path_csv_links_indeed):
 
     #gravar a lista de links em um arquivo csv
     df = pd.DataFrame(links)
-    df.to_csv(path_csv_links_indeed, index=False, header=False)
+    df.to_csv(path_csv_links_indeed, mode='a', index=False, header=False)
 
 
 
@@ -274,8 +275,7 @@ def raspas_paginas_e_salvar_links_indeed(lista_cargos, path_csv_links_indeed):
 
 
 
-
-def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_resultado_indeed):
+def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_vagas_indeed, start_iter,end_iter):
 
     with open(path_csv_links_indeed, 'r') as file:
         links = file.read().splitlines()
@@ -284,7 +284,7 @@ def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_result
 
     driver = webdriver.Firefox()
 
-    for i, url in enumerate(links[0:5]):
+    for i, url in enumerate(links[start_iter : end_iter]):
         time.sleep(random.uniform(0, 5))
         driver.get(url)
 
@@ -314,16 +314,24 @@ def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_result
 
                 titulo_vaga = data_job['title']
                 titulo_resumo = data_job['normalizedTitle']
-                faixa_salarial_min = data['jobInfoWrapperModel']['jobInfoModel']['jobInfoHeaderModel']['salaryMin']
-                faixa_salarial_max = data['jobInfoWrapperModel']['jobInfoModel']['jobInfoHeaderModel']['salaryMax']
-                faixa_salarial = f'R${faixa_salarial_min} - R${faixa_salarial_max}'
-                empresa_contratante = data_job['sourceEmployerName']
-                estado = data_job['location']['admin1Code']
-                cidade = data_job['location']['city']
+
+                try: faixa_salarial = data['salaryInfoModel']['salaryText']
+                except: faixa_salarial = None
+
+                try: empresa_contratante = data_job['sourceEmployerName']
+                except: empresa_contratante = None
+
+                try: estado = data_job['location']['admin1Code']
+                except: estado = None
+
+                try: cidade = data_job['location']['city']
+                except: cidade = None
+                
                 #url = 
                 descricao_html = data_job['description']['html']
                 descricao_soup = BeautifulSoup(descricao_html, 'html.parser')
-                descricao = descricao_soup.get_text(separator='\n', strip=True)
+                descricao_text = descricao_soup.get_text(separator='.', strip=True)
+                descricao = descricao_text.replace('\n', '.').replace('..', '.')
                 #beneficios =
                 #regime_contrato = 
 
@@ -344,10 +352,12 @@ def iterar_paginas_e_extrair_dados_indeed(path_csv_links_indeed, path_csv_result
 
                 df = pd.concat([df, nova_linha], ignore_index=True)
 
+                print(f'Sucesso na iteração: {i}')
+
             except:
                 print(f'Erro na iteração: {i}')
                     
         else:
             print("JSON não encontrado no script.")
 
-    df.to_csv(path_csv_resultado_indeed, index=False, quoting=1, encoding='utf-8')
+    df.to_csv(path_csv_vagas_indeed, mode='a', index=False, header=False)

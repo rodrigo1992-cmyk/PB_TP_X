@@ -3,8 +3,16 @@
 import pandas as pd
 import re
 
+def Juntar_datasets_vagas(path_csv_vagas_catho, path_csv_vagas_indeed, path_csv_vagas):
+    df_vagas_catho = pd.read_csv(path_csv_vagas_catho)
+    df_vagas_indeed = pd.read_csv(path_csv_vagas_indeed)
+
+    df_vagas = pd.concat([df_vagas_catho, df_vagas_indeed], ignore_index=True)
+    df_vagas.to_csv(path_csv_vagas, index=False)
+
 def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
     df_vagas = pd.read_csv(path_csv_vagas)
+    df_vagas = df_vagas.dropna(subset=['titulo_resumo'])
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].str.upper()
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].replace('CLIENTE', 'EMPRESA CONFIDENCIAL').replace('CONFIDENCIAL', 'EMPRESA CONFIDENCIAL').replace('********', 'EMPRESA CONFIDENCIAL')
 
