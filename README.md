@@ -1,8 +1,60 @@
-# RESPOSTAS ao TP3
-## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/tree/PB_TP3
+# RESPOSTAS ao TP4
+## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/tree/PB_TP4
 ## Para visualizar no Streamlit, executar arquivo "app\pages\app_streamlit.py"
 ## Para subir o servidor com uvicorn, executar o arquivo "app\services\main_backend.py"
 
+# 1. Identificação e Escolha do Modelo LLM (Local):
+Critérios de Seleção: Pesquise e selecione o modelo de linguagem natural mais adequado para a sua aplicação, considerando os seguintes critérios:
+Desempenho: Avalie a precisão, a capacidade de resposta e o tipo de tarefa para a qual o modelo foi treinado (ex: GPT, BERT, T5).
+Custo Computacional Local: Verifique os recursos de hardware necessários para rodar o modelo no ambiente local (como GPU, memória RAM, etc.).
+Acessibilidade Local: Garanta que o modelo escolhido pode ser carregado localmente, utilizando bibliotecas como Transformers da HuggingFace para download e execução do modelo em sua própria máquina.
+Documentação: Justifique a escolha do modelo, detalhando os critérios de desempenho, custo computacional local e acessibilidade que levaram à sua decisão.
+Integração de LLM com FastAPI no Ambiente Local:
+Execução Local: Utilize um modelo da HuggingFace ou um modelo treinado localmente para realizar tarefas de processamento de linguagem natural (como geração de texto, resumo automático, classificação de sentimento, etc.) e integre-o ao seu backend FastAPI, sem necessidade de conexão com a nuvem.
+Rota FastAPI: Implemente uma rota em FastAPI que se conecte ao modelo LLM rodando localmente para processar dados textuais fornecidos pela aplicação. Exemplo de rota:
+POST /processar_texto: Rota que recebe um texto enviado pelo usuário e retorna a análise ou processamento realizado pelo modelo de linguagem, como um resumo ou análise de sentimento.
+Execução Local do HuggingFace: Baixe o modelo diretamente em seu ambiente de desenvolvimento local e utilize as funções da biblioteca Transformers para carregar e executar o modelo sem depender de serviços externos.
+Manipulação das Respostas da API:
+Response Models: Crie Response Models em FastAPI para garantir que as respostas da API sejam consistentes e estruturadas, utilizando modelos de resposta claros e bem definidos.
+Exemplo: A rota /processar_texto deve retornar um JSON estruturado com informações detalhadas, como o texto processado, o tipo de análise realizada (resumo, classificação, etc.) e os resultados gerados.
+Validação das Respostas: Assegure-se de que todos os retornos da API estejam validados, garantindo que os dados enviados e recebidos estejam no formato correto e sejam compreensíveis para o cliente.
+Tratamento Robusto de Erros na API:
+Exceções HTTP: Implemente um tratamento robusto de erros na API, utilizando exceções HTTP específicas em FastAPI para lidar com problemas que possam ocorrer durante as requisições (como falha ao carregar o modelo, problemas com os dados de entrada, ou timeouts).
+Exemplo: Se o modelo LLM não estiver carregado corretamente ou ocorrer um erro na manipulação dos dados, a aplicação deve retornar um código de erro adequado (ex: 503 Serviço Indisponível) e uma mensagem explicativa.
+Melhoria da Experiência do Usuário: Garanta que os erros sejam tratados de forma clara e informativa, proporcionando feedback útil para o usuário final e facilitando o diagnóstico de possíveis problemas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------- REPOSTAS QUE TINHAM SIDO DADAS AO TP3------------------------------------------------------------------------------------
 #### Revisão e Atualização da Documentação:
   * Revise o Project Charter e o Data Summary Report, atualizando a documentação para refletir as novas funcionalidades e decisões tomadas nesta fase do projeto.
   * Reavalie o problema de negócio à luz das novas ferramentas (como FastAPI e Selenium) e ajuste suas metas, se necessário.
