@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import requests
 
+
+#-----------------------------------------------CHAMADAS A APIS----------------------------------------------------
 @st.cache_data
 def api_get_file_vagas_norm():
     '''
@@ -93,10 +95,6 @@ def api_post_new_vagas(new_df):
     st.dataframe(df_vagas_filt, height = 500)
 
 
-@st.cache_data
-def import_df(path):
-    df = pd.read_csv(path)
-    return df
 
 
 
@@ -104,6 +102,14 @@ def import_df(path):
 
 
 
+
+
+#-----------------------------------------------FUNÇÕES DE FILTROS----------------------------------------------------
+
+# @st.cache_data
+# def import_df(path):
+#     df = pd.read_csv(path)
+#     return df
 
 
 def filtrar_df_vagas(df_vagas: pd.DataFrame, filtro_perfil: str, filtro_nivel: str, filtro_uf: str, filtro_empresa: str):
@@ -119,11 +125,6 @@ def filtrar_df_vagas(df_vagas: pd.DataFrame, filtro_perfil: str, filtro_nivel: s
     if filtro_empresa != 'Selecione':
         df = df[df['empresa_contratante'] == filtro_empresa]
     return df
-
-
-
-
-
 
 
 
@@ -171,3 +172,10 @@ def filtros_barra_lateral(lista_vagas: list, lista_nivel: list, lista_uf: list, 
     st.session_state.filtro_nivel = st.sidebar.selectbox('Filtrar Nível da Vaga', lista_nivel, key='2')
     st.session_state.filtro_uf = st.sidebar.selectbox('Filtrar Estado', lista_uf, key='3')
     st.session_state.filtro_empresa = st.sidebar.selectbox('Filtrar Empresa', lista_empresa, key='4')
+
+
+
+
+
+
+#-----------------------------------------------FUNÇÕES DE GRÁFICOS----------------------------------------------------

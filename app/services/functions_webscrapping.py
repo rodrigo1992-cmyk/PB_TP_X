@@ -50,7 +50,7 @@ def obter_paginas_de_busca(lista_cargos, range_max):
        soup_paginas_de_busca.append(s)
     return soup_paginas_de_busca
 
-def raspas_paginas_e_salvar_links(soup_paginas_de_busca, links_path):
+def raspar_paginas_e_salvar_links(soup_paginas_de_busca, links_path):
     """
     Esta função procura por links de vagas no objeto BeautifulSoup fornecido,
     extrai esses links e os salva em um arquivo CSV no caminho especificado.

@@ -17,7 +17,7 @@ def webscrapping_catho():
     print(soup_paginas_de_busca)
 
     #Raspa as páginas de busca e salva os links de cada vaga em um arquivo csv
-    links = raspas_paginas_e_salvar_links(soup_paginas_de_busca, dic_paths['csv_links'])
+    links = raspar_paginas_e_salvar_links(soup_paginas_de_busca, dic_paths['csv_links'])
     print(links)
 
     #Itera sobre os links salvos e salva cada página de vaga em um arquivo html separado
