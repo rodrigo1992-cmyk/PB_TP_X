@@ -8,7 +8,7 @@
   * Reavalie o problema de negócio à luz das novas ferramentas (como FastAPI e Selenium) e ajuste suas metas, se necessário.
   * Atualize a descrição das fontes de dados utilizadas, considerando possíveis novas fontes obtidas com scraping dinâmico.
   
-  >> Não houve necessidade de revisão.
+  >> Não houve necessidade de revisão. 
 
 #### Criação de uma Aplicação com Múltiplas Páginas:
   * Evolua a interface da sua aplicação em Streamlit, implementando múltiplas páginas e um menu de navegação que permita ao usuário transitar facilmente entre diferentes seções da aplicação.
