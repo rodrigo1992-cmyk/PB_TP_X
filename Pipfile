@@ -26,6 +26,7 @@ torchaudio = "*"
 mistral-inference = "*"
 tf-keras = "*"
 tensorflow-cpu = "*"
+streamlit-navigation-bar = "*"
 
 [dev-packages]
 ipykernel = "*"

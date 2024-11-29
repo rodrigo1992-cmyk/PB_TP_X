@@ -1,7 +1,7 @@
 import streamlit as st
 from app.services.functions_graphs import *
 
-def exibir():
+def ProfileAnalysis():
     st.title("Análise dos Diferentes Perfis de Profissionais de Dados")
     col_a, col_b = st.columns(2)
     with col_a:
