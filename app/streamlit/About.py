@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from utils import *
 
-def About():
+def exibir():
     st.title("Radar de Vagas DS")
     st.write("**Escopo**: Ao consolidar e analisar as competências requisitadas por cada empresa, o projeto apoia a inserção de profissionais no mercado de trabalho, contribuindo para a geração de empregos e o desenvolvimento de uma força de trabalho com qualificação alinhada ao mercado. Isso não só ajuda os profissionais a encontrar melhores oportunidades de trabalho, mas também fortalece a economia ao atender à demanda das empresas por talentos qualificados. Este visa atender à ODS 8 (Trabalho Decente e Crescimento Econômico).")
     st.write("""

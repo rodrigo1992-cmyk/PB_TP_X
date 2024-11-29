@@ -22,7 +22,7 @@ def response_generator():
         yield word + " "
         time.sleep(0.05)
 
-def JobFinder():
+def exibir():
     st.title("Visualização das Vagas Anunciadas")
 
     # -----------------INICIALIZAÇÃO--------------------
