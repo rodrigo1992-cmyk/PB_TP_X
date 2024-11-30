@@ -1,3 +1,6 @@
+import sys
+sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X')
+
 import os
 from fastapi import APIRouter, HTTPException
 import csv
@@ -6,6 +9,9 @@ import pandas as pd
 from pydantic import BaseModel 
 from typing import List
 from fastapi.encoders import jsonable_encoder
+from app.services.llm_search import search_vagas
+from app.model.api_models import *
+
 
 
 def dicionario_paths():
@@ -39,7 +45,7 @@ async def read_data_vagas_norm():
         reader = csv.DictReader(file)
         data = [row for row in reader]  
 
-    return data 
+    return data
 
 
 
@@ -54,26 +60,9 @@ async def read_data_requisitos():
     return data 
 
 
-class Vaga(BaseModel):
-    id_vaga: int
-    data_anuncio: str
-    titulo_vaga: str
-    titulo_resumo: str
-    faixa_salarial: str
-    empresa_contratante: str
-    estado:str
-    cidade: str 
-    url: str
-    descricao: str
-    beneficios: str
-    regimeContrato: str
-    regiao: str
-    perfil_vaga: str
-    nivel_cargo: str
-    salario: int
 
 @router.post("/api_post_new_vagas/")
-async def api_post_new_vagas(novas_vagas: list[Vaga]):
+async def api_post_new_vagas(novas_vagas: list[ResponseModelVaga]):
 
     df_vagas = pd.read_csv(dic_paths['csv_vagas_norm'])
     
@@ -91,3 +80,25 @@ async def api_post_new_vagas(novas_vagas: list[Vaga]):
     response = "Vagas adicionadas com sucesso!"
 
     return{response}
+
+
+
+@router.post("/api_llm_search/")
+async def api_post_llm_search(input_sentence: ApiLlmSearchInput):
+
+    print("Input recebido, formato válido. Invocando a função de busca...")
+
+    try:
+        #chamar o modelo
+        result = search_vagas(
+            model_name = "sentence-transformers/all-mpnet-base-v2", 
+            cache_file = "embeddings_cache3.npy", 
+            db_path = dic_paths['csv_vagas_norm'],
+            input_sentence = input_sentence.text
+        )
+        print(result)
+
+        return result
+    
+    except Exception as e:
+        return {"error": str(e)}

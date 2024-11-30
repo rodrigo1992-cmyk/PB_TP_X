@@ -79,6 +79,7 @@
 Execução Local do HuggingFace: Baixe o modelo diretamente em seu ambiente de desenvolvimento local e utilize as funções da biblioteca Transformers para carregar e executar o modelo sem depender de serviços externos.
 
 > Foi realizada a integração do Modelo para o Chat de Buscas, pois o modelo para Extração de Entidades Nomeadas é para execução pontual no backend, não sendo invocado pelo usuário. A chamada à API está no arquivo pages/utils.py e o modelo no arquivo routes/paths.py 
+> Por enquanto o modelo está retornando o índice das vagas encontradas. Em seguida irei implementar uma janela lateral que irá exibir o conteúdo da vaga de forma estruturada e irá funcionar de forma sincronizada com o chat.
 
 # 3.Manipulação das Respostas da API:
 * **Response Models**: Crie Response Models em FastAPI para garantir que as respostas da API sejam consistentes e estruturadas, utilizando modelos de resposta claros e bem definidos.
@@ -92,4 +93,4 @@ Execução Local do HuggingFace: Baixe o modelo diretamente em seu ambiente de d
   * Exemplo: Se o modelo LLM não estiver carregado corretamente ou ocorrer um erro na manipulação dos dados, a aplicação deve retornar um código de erro adequado (ex: 503 Serviço Indisponível) e uma mensagem explicativa.
 * **Melhoria da Experiência do Usuário**: Garanta que os erros sejam tratados de forma clara e informativa, proporcionando feedback útil para o usuário final e facilitando o diagnóstico de possíveis problemas.
 
-> Tratamento de erros implementado em todas as APIs. Arquivo router/paths.py
+> Tratamento de erros implementado em todas as APIs, principalmente no chat com o LLM de Busca. Arquivo router/paths.py

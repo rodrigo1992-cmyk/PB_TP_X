@@ -5,7 +5,7 @@ from streamlit_navigation_bar import st_navbar
 import pandas as pd
 from utils import *
 
-
+st.set_page_config(layout="wide", page_title="DataJob Finder", page_icon="🔎")
 
 #-------------Importa todos os DFs necessários----------------
 st.session_state.df_vagas = api_get_file_vagas_norm()
@@ -28,7 +28,7 @@ lista_empresa.insert(0, 'Selecione')
 
 #-------------Cria a Barra de Filtros Lateral----------------
 st.sidebar.header('Navegação')
-page = st.sidebar.selectbox("nav",["About", "Job Finder", "Profile Analysis"],label_visibility="hidden")
+page = st.sidebar.selectbox("nav",["About", "Job Finder", "Profile Analysis", "Data Download"],label_visibility="hidden")
 
 st.sidebar.header('Filtros')
 filtros_barra_lateral(lista_vagas_perfis, lista_nivel, lista_estado, lista_empresa)
@@ -50,3 +50,6 @@ elif page == "Job Finder":
 elif page == "Profile Analysis":
     import ProfileAnalysis as ProfileAnalysis
     ProfileAnalysis.exibir()
+elif page == "Data Download":
+    import app.pages.DataDownload as DataDownload
+    DataDownload.exibir()

@@ -1,39 +1,28 @@
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import csv
 import os
+import pandas as pd
 
-token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-print("Token carregado")
+BASE_DIR = r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X'
 
-# Carregar o modelo sem quantização de bitsandbytes
-model = AutoModelForCausalLM.from_pretrained(
-    "mistralai/Mistral-7B-Instruct-v0.2",
-    token=token
-)
-print("Modelo Instanciado")
-
-tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2", token=token)
-print("Tokenizador Instanciado")
-
-# Definindo o prompt
-prompt = "My favourite condiment is"
-
-messages = [
-    {"role": "user", "content": "What is your favourite condiment?"},
-    {"role": "assistant", "content": "Well, I'm quite partial to a good squeeze of fresh lemon juice. It adds just the right amount of zesty flavour to whatever I'm cooking up in the kitchen!"},
-    {"role": "user", "content": "Do you have mayonnaise recipes?"}
-]
-print("Prompt e mensagens Definidos")
+dic_paths = {
+    'csv_links': os.path.join(BASE_DIR, r'app\data\raw\links_vagas_catho.csv'),
+    'csv_links_indeed' : os.path.join(BASE_DIR, r'app\data\raw\links_vagas_indeed.csv'),
+    'folder_htmls': os.path.join(BASE_DIR, r'app\data\html_pages'),
+    'csv_vagas_catho': os.path.join(BASE_DIR, r'app\data\raw\vagas_catho.csv'),
+    'csv_vagas_indeed' : os.path.join(BASE_DIR, r'app\data\raw\vagas_indeed.csv'),
+    'csv_vagas': os.path.join(BASE_DIR, r'app\data\raw\vagas.csv'),
+    'csv_vagas_norm': os.path.join(BASE_DIR, r'app\data\processed\vagas_norm.csv'),
+    'csv_lista_ferramentas': os.path.join(BASE_DIR, r'app\data\processed\ferramentas.csv'),
+    'csv_requisitos': os.path.join(BASE_DIR, r'app\data\processed\requisitos.csv')
+}
 
 
-# Aplicar o template de chat e mover para a CPU
-model_inputs = tokenizer.apply_chat_template(messages, return_tensors="pt").to("cpu")
-print("Aplicado Chat Template")
 
-# Gerar IDs
-with torch.no_grad():  # Desativar o cálculo de gradientes
-    generated_ids = model.generate(model_inputs, max_new_tokens=100, do_sample=True)
+with open(dic_paths['csv_vagas_norm'], mode='r', encoding='utf-8') as file:
+    reader = csv.DictReader(file)
+    data = [row for row in reader]  
+    
+    df = pd.DataFrame(data)
+    print(df.dtypes)
 
-# Decodificar a resposta
-response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-print(response)
+

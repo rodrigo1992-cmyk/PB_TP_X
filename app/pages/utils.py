@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import requests
-
+import time
+import random
 
 #-----------------------------------------------CHAMADAS A APIS----------------------------------------------------
 @st.cache_data
@@ -96,11 +97,35 @@ def api_post_new_vagas(new_df):
 
 
 
+def api_post_llm_search(search_sentence):
 
+    dict = {'text': search_sentence}
+    print("Input convertido em dict, será realizado o request")
 
+    response = requests.post("http://localhost:8000/api_llm_search", json=dict)
+    
+    if response.status_code == 200:
+        print("Resposta recebida com sucesso")
 
+        response = response.json()
 
-
+        print(response)
+        if 'success' in response:
+            response_value = response['success']
+            response_value = f"Encontrei 3 vagas para você. Confira o conteúdo delas na sessão lateral da página. IDs: {response_value}"
+            return response_value
+        
+        else:
+            response_value = "☹️ Desculpe, infelizmente não consegui realizar a busca neste momento. Por favor tente mais tarde. \n Motivo: "
+            response_value += response['error']
+            print(type(response_value))
+            return response_value            
+    
+    else:
+        print("Erro: ", response.status_code)
+        response_value = "☹️ Desculpe, infelizmente não consegui realizar a busca neste momento. Por favor tente mais tarde. \n Erro: "
+        response_value += response.status_code
+        return response_value
 
 
 
@@ -175,7 +200,28 @@ def filtros_barra_lateral(lista_vagas: list, lista_nivel: list, lista_uf: list, 
 
 
 
+def msg_wait_a_sec():
+    time.sleep(1)
+    response = random.choice(
+        [
+            "Ok, aguarde alguns segundos que irei buscar a vaga ideal.",
+            "Ótimo! Vou procurar a vaga perfeita para você, um segundo.",
+            "Aguarde um momento que irei olhar nos meus arquivos.",
+            "Perfeito! Um segundo que vou achar as vagas ideais para você.",
+            "Tenho a vaga perfeita nos meus arquivos! Um segundo que vou pegar ela para você.",
+            "Entendido! Tenho exatamente o que você precisa. Aguarde um momento.",
+            "Maravilha! Já sei o que você precisa. Vou buscar a vaga ideal para você.",
+        ]
+    )
+
+    return response
 
 
-
+def typing_effect(text):
+    for phrase in text.split('\n'):
+        time.sleep(1)
+        for word in phrase.split():
+            yield word + " "
+            time.sleep(0.05)
+        yield "  \n" 
 #-----------------------------------------------FUNÇÕES DE GRÁFICOS----------------------------------------------------
