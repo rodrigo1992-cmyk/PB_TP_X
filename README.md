@@ -1,5 +1,5 @@
 # RESPOSTAS ao TP4
-## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PT_TP4/
+## Projeto Disponível em: https://github.com/rodrigo1992-cmyk/PB_TP_X/tree/PT_TP4
 ## Para visualizar no Streamlit, executar arquivo "app\pages\app_streamlit.py"
 ## Para subir o servidor com uvicorn, executar o arquivo "app\services\main_backend.py"
 
