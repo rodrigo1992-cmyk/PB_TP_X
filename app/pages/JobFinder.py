@@ -5,7 +5,7 @@ from utils import *
 
 
 def exibir():
-    st.title("Visualização das Vagas Anunciadas")
+    st.title("Buscador de vagas")
 
     # -----------------INICIALIZAÇÃO--------------------
     # Inicializar variável de ambiente
@@ -39,7 +39,11 @@ def exibir():
 
         #-----------------CHAMADA À API-------------------
         with st.chat_message("assistant"): 
-            response = st.write_stream(typing_effect(api_post_llm_search(input_user)))
+            resp_orig, lista_ids = api_post_llm_search(input_user)
+            response = st.write_stream(typing_effect(resp_orig))
+            response += st.write_stream(typing_effect(buscar_id_na_base(lista_ids)))
+
+
 
         # Adiciona a mensagem do assistente na variável de ambiente (histórico de mensagens)
         st.session_state.messages.append({"role": "assistant", "content": response})

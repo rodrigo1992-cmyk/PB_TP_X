@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 import csv
 import json
 import pandas as pd
-from pydantic import BaseModel 
+from pydantic import ValidationError, field_validator, BaseModel
 from typing import List
 from fastapi.encoders import jsonable_encoder
 from app.services.llm_search import search_vagas
@@ -42,11 +42,34 @@ router = APIRouter()
 @router.get("/csv_vagas_norm")
 async def read_data_vagas_norm():
     with open(dic_paths['csv_vagas_norm'], mode='r', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        data = [row for row in reader]  
+        dados = csv.DictReader(file)
 
-    return data
+        # Validação com Pydantic descartando linhas com erro. (Tenta fazer a conversão, e usa o except para exibir os valores que não passaram na validação)
+        dados_validados = []
+        linha = 0
+        for item in dados:
+            linha += 1
+            try: dados_validados.append(SchemaDFVagas(**item))
+            except ValidationError as erro:
+                log = erro.errors()[0]
+                print('Erro na Linha:', linha, '| Coluna: ', log['loc'][0], '| Valor: ', log['input'], '| Tipo Esperado:', log['type'])
 
+        #Remontando como uma lista de dicionários. Cada linha do CSV é um dicionário
+        list_dict_resul = [item.model_dump() for item in dados_validados]
+
+    return list_dict_resul
+
+
+
+
+
+# @router.get("/csv_requisitos")
+# async def read_data_requisitos():
+#     with open(dic_paths['csv_requisitos'], mode='r', encoding='utf-8') as file:
+#         reader = csv.DictReader(file)
+#         data = [row for row in reader]  
+
+#     return data 
 
 
 
@@ -55,14 +78,26 @@ async def read_data_vagas_norm():
 async def read_data_requisitos():
     with open(dic_paths['csv_requisitos'], mode='r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
-        data = [row for row in reader]  
+
+        data = []
+        for row in reader:
+            try:
+                # Valida os dados com o modelo Pydantic
+                requisito = SchemaDFRequisito(id_vaga=int(row['id_vaga']), tool=row['tool'])
+                # Adiciona ao resultado no formato original
+                data.append(row)
+
+            except ValidationError as erro:
+                log = erro.errors()[0]
+                print('Valor: ', log['input'], '| Tipo Esperado:', log['type'])
 
     return data 
 
 
 
+
 @router.post("/api_post_new_vagas/")
-async def api_post_new_vagas(novas_vagas: list[ResponseModelVaga]):
+async def api_post_new_vagas(novas_vagas: list[SchemaDFVagas]):
 
     df_vagas = pd.read_csv(dic_paths['csv_vagas_norm'])
     
@@ -70,16 +105,16 @@ async def api_post_new_vagas(novas_vagas: list[ResponseModelVaga]):
     novas_vagas_json = jsonable_encoder(novas_vagas)
     df_novas_vagas = pd.DataFrame(novas_vagas_json)
 
-        #Conferir se o id_vaga já existe
+    #Conferir se o id_vaga já existe
     if df_novas_vagas['id_vaga'].isin(df_vagas['id_vaga']).any():
         raise HTTPException(status_code=400, detail="Uma ou mais das vagas carregadas já estão contidas no dataframe atual.")
     
-    
-    df = pd.concat([df_vagas, df_novas_vagas], ignore_index=True)
-    df.to_csv(dic_paths['csv_vagas_norm'], index=False)
-    response = "Vagas adicionadas com sucesso!"
+    else:
+        df = pd.concat([df_vagas, df_novas_vagas], ignore_index=True)
+        df.to_csv(dic_paths['csv_vagas_norm'], index=False)
+        response = "Vagas adicionadas com sucesso!"
 
-    return{response}
+        return {response}
 
 
 
@@ -96,7 +131,6 @@ async def api_post_llm_search(input_sentence: ApiLlmSearchInput):
             db_path = dic_paths['csv_vagas_norm'],
             input_sentence = input_sentence.text
         )
-        print(result)
 
         return result
     

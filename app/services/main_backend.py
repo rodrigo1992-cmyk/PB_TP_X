@@ -32,8 +32,8 @@ def webscrapping_catho():
 def webscrapping_indeed():
     lista_cargos = ['cientista+de+dados', 'analista+de+dados', 'engenheiro+de+dados', 'analista+bi']
     
-    #Os intervalos são de 10 em 10, então de 0 a 21 serãoexecutadas 3 iterações (0, 10 e 20)
-    #raspas_paginas_e_salvar_links_indeed(lista_cargos, dic_paths['csv_links_indeed'], start_range=30, end_range=51)
+    #Os intervalos são de 10 em 10, então de 0 a 21 serão executadas 3 iterações (0, 10 e 20)
+    raspas_paginas_e_salvar_links_indeed(lista_cargos, dic_paths['csv_links_indeed'], start_range=30, end_range=51)
     iterar_paginas_e_extrair_dados_indeed(dic_paths['csv_links_indeed'], dic_paths['csv_vagas_indeed'], start_iter= 0, end_iter=361)
 
 def dataPreProcessing():

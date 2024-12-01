@@ -11,7 +11,12 @@ def Juntar_datasets_vagas(path_csv_vagas_catho, path_csv_vagas_indeed, path_csv_
     df_vagas.to_csv(path_csv_vagas, index=False)
 
 def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
+
     df_vagas = pd.read_csv(path_csv_vagas)
+    print("QTD linhas original: ", df_vagas.shape)
+    
+    #----------- Etapa 1: Ajustar Empresa e Região------------
+
     df_vagas = df_vagas.dropna(subset=['titulo_resumo'])
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].str.upper()
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].replace('CLIENTE', 'EMPRESA CONFIDENCIAL').replace('CONFIDENCIAL', 'EMPRESA CONFIDENCIAL').replace('********', 'EMPRESA CONFIDENCIAL')
@@ -21,10 +26,10 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
     #Adicionar uma coluna de região (Sul, Sudeste, Centro-Oeste, Nordeste, Norte) a partir da coluna de estado
     df_vagas['regiao'] = df_vagas['estado'].map({'AC': 'Norte', 'AL': 'Nordeste', 'AP': 'Norte', 'AM': 'Norte', 'BA': 'Nordeste', 'CE': 'Nordeste', 'DF': 'Centro-Oeste', 'ES': 'Sudeste', 'GO': 'Centro-Oeste', 'MA': 'Nordeste', 'MT': 'Centro-Oeste', 'MS': 'Centro-Oeste', 'MG': 'Sudeste', 'PA': 'Norte', 'PB': 'Nordeste', 'PR': 'Sul', 'PE': 'Nordeste', 'PI': 'Nordeste', 'RJ': 'Sudeste', 'RN': 'Nordeste', 'RS': 'Sul', 'RO': 'Norte', 'RR': 'Norte', 'SC': 'Sul', 'SP': 'Sudeste', 'SE': 'Nordeste', 'TO': 'Norte'})
 
+    print("QTD linhas após etapa 1: ", df_vagas.shape)
 
 
-
-    #----------- Classificar as vagas nas categorias: Analista, Cientista ou Engenheiro de Dados------------
+    #----------- Etapa 2: Classificar as vagas nas categorias: Analista, Cientista ou Engenheiro de Dados------------
     lista_vagas = df_vagas.titulo_resumo.unique()
 
     de_para_vagas = {}
@@ -34,7 +39,7 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
             norm = 'engenheiro'
         elif 'anal' in vaga and 'dados' in vaga:
             norm = 'analista'
-        elif 'cientista' in vaga or 'ciencia' in vaga:
+        elif 'cientista' in vaga or 'ciencia' in vaga or 'learning' in vaga or 'scientist'in vaga:
             norm = 'cientista'
         elif 'anal' in vaga and 'bi' in vaga:
             norm = 'analista'
@@ -48,14 +53,16 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
     #Join para trazer a classificação das vagas
     df_vagas['perfil_vaga'] = df_vagas['titulo_resumo'].map(de_para_vagas)
 
-    #Retirar  as duas vagas que ficaram como "outros", pois eram de analistas de sistemas
+    #Retirar as duas vagas que ficaram como "outros", pois eram de analistas de sistemas
+    df_outros = df_vagas[df_vagas['perfil_vaga'] == 'outros']
+
     df_vagas = df_vagas[df_vagas['perfil_vaga'] != 'outros']
 
+    print("QTD linhas após etapa 2: ", df_vagas.shape)
 
 
 
-
-    #-----------Descobrindo a Serionidade da Vaga (Junior, Pleno, Senior)------------
+    #----------- Etapa 3: Descobrindo a Serionidade da Vaga (Junior, Pleno, Senior)------------
 
     lista_vagas = df_vagas.titulo_resumo.unique()
 
@@ -74,13 +81,13 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
     #Join para trazer a classificação das vagas
     df_vagas['nivel_cargo'] = df_vagas['titulo_resumo'].map(nivel_cargo)
 
+    print("QTD linhas após etapa 3: ", df_vagas.shape)
 
-
-    #--------------Ajustando a média salarial a partir da faixa salarial---------------------
+    #-------------- Etapa 4: Ajustando a média salarial a partir da faixa salarial---------------------
 
     for i,row in df_vagas.iterrows():
         if pd.isnull(row.faixa_salarial):
-            row.salario = None
+            df_vagas.at[i, 'salario'] = 0
         else:
             pattern = r"R\$ ([\d\.]+,\d{2}) a R\$ ([\d\.]+,\d{2})"
             match = re.search(pattern, row.faixa_salarial)
@@ -89,10 +96,12 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
                 maximo = float(match.group(2).replace('.','').replace(',','.'))
                 media = round((minimo + maximo) / 2, 0)
             else:
-                media = None
+                media = 0
 
             df_vagas.at[i, 'salario'] = media
 
+
+    print("QTD linhas após etapa 4: ", df_vagas.shape)
 
     df_vagas.to_csv(path_csv_vagas_norm, index=False)
 

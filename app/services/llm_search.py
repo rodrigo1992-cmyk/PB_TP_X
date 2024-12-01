@@ -6,6 +6,8 @@ import os
 
 def search_vagas(model_name, cache_file, db_path, input_sentence): 
 
+    df = pd.read_csv(db_path)
+    
     # Inicializar o modelo
     try: model = SentenceTransformer(model_name)
     except: {"error": "⛔ Erro ao instanciar o modelo"}
@@ -17,7 +19,6 @@ def search_vagas(model_name, cache_file, db_path, input_sentence):
 
     else:
         try:
-            df = pd.read_csv(db_path)
             #transformar em um dicionário com id_vaga e descricao
             df = df[['id_vaga', 'descricao']].set_index('id_vaga').to_dict()['descricao']
 
@@ -36,7 +37,10 @@ def search_vagas(model_name, cache_file, db_path, input_sentence):
         similarities = util.cos_sim(input_embedding, sentence_embeddings).cpu().numpy().flatten()  # Garantir que seja um vetor 1D
     except: return {"error": "⛔ Erro ao calcular as similaridades"}
 
-    top_3_indices = np.argsort(similarities)[::-1][:3]
-    response = top_3_indices.tolist()
+    posicao_top_3 = np.argsort(similarities)[::-1][:3]
+
+    top_3_id_vaga = df.iloc[posicao_top_3]["id_vaga"]  # Selecionar as linhas correspondentes aos índices do embedding
+
+    response = top_3_id_vaga.tolist()
 
     return {"success": response}

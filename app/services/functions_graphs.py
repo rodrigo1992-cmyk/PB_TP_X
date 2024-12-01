@@ -31,11 +31,11 @@ def plot_box_salarios(df):
         df: usar o dataframe vagas_norm
     '''
 
-    df = df[df['salario'].notna()]
+    df_filt = df[df['salario'] != 0]
 
     color_palette = ['#0068C9', '#83C9FF', '#FF2B2B']
 
-    fig = px.box(df, y="salario", x="perfil_vaga", color="perfil_vaga",color_discrete_sequence=color_palette)
+    fig = px.box(df_filt, y="salario", x="perfil_vaga", color="perfil_vaga",color_discrete_sequence=color_palette)
     fig.update_traces(quartilemethod="inclusive")
     
     st.plotly_chart(fig)
@@ -61,6 +61,8 @@ def plot_dist_regiao(df):
     args:
         df: usar o dataframe vagas_norm
     '''
+    df = df[df['estado'].notna()]
+
     df = df.groupby(['perfil_vaga','regiao', 'estado']).size().reset_index(name='count')
 
     fig = px.sunburst(df, path=['perfil_vaga', 'regiao', 'estado'], values='count')

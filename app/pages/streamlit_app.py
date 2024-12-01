@@ -8,8 +8,11 @@ from utils import *
 st.set_page_config(layout="wide", page_title="DataJob Finder", page_icon="🔎")
 
 #-------------Importa todos os DFs necessários----------------
-st.session_state.df_vagas = api_get_file_vagas_norm()
-st.session_state.df_requisitos = api_get_file_requisitos()
+try: st.session_state.df_vagas = api_get_file_vagas_norm()
+except: st.write("### Falha na requisição à API para obtenção da base de vagas.")
+
+try: st.session_state.df_requisitos = api_get_file_requisitos()
+except: st.write("### Falha na requisição à API para obtenção da base de requisitos.")
 
 
 #-------------Cria as variáveis necessárias para os filtros----------------

@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 import time
 import random
+import csv
+import io
 
 #-----------------------------------------------CHAMADAS A APIS----------------------------------------------------
 @st.cache_data
@@ -16,7 +18,6 @@ def api_get_file_vagas_norm():
     if response.status_code == 200:
         data = response.json()
         df = pd.DataFrame(data)
-        df['id_vaga'] = pd.to_numeric(df['id_vaga'], errors='coerce')
         df['salario'] = pd.to_numeric(df['salario'], errors='coerce')
 
         return df
@@ -40,7 +41,6 @@ def api_get_file_requisitos():
     if response.status_code == 200:
         data = response.json()
         df = pd.DataFrame(data)
-        df['id_vaga'] = pd.to_numeric(df['id_vaga'], errors='coerce')
 
         return df
     else:
@@ -49,52 +49,58 @@ def api_get_file_requisitos():
 
 
 
+def control0():
+    if 'control' in st.session_state:
+        del st.session_state.control
+        st.write('executou, sem control no ststate')
+    if 'file_uploader' in st.session_state:
+        del st.session_state['file_uploader']
+        st.write('executou, o control está no ststate')
+    st.rerun()
 
 
+def api_post_new_vagas(uploaded_file):
 
+    if uploaded_file is not None:
 
-def api_post_new_vagas(new_df):
-    df_vagas_filt = st.session_state.df_vagas
+        #converter o csv em dicionário
+        uploaded_file = io.TextIOWrapper(uploaded_file, encoding='utf-8')
+        reader = csv.DictReader(uploaded_file)
+        uploaded_dict = [row for row in reader]
 
-    if new_df is not None:
-    
-        st.title('Pré-Visualização das linhas a serem carregadas')
-
-        #converter o dataframe em dicionário
-        new_rows = new_df.to_dict(orient='records')
         
-        # No Json os valores NaN devem ser convertidos para None (Em campos de String) e para Zero (em campos numéricos)
-        processed_rows = []
-        for row in new_rows:
-            processed_row = {}
-            for key, value in row.items():
-                if pd.notna(value):
-                    processed_row[key] = value
-                else:
-                    # Devo adicionar aqui a identificação de todos os campos numéricos que devem ser convertidos para 0
-                    if key == 'salario':
-                        processed_row[key] = 0
-                    else:
-                        processed_row[key] = None
-            
-            processed_rows.append(processed_row)
+        # No Json os valores em branco devem ser convertidos para None (Em campos de String) e para Zero (em campos numéricos)
+        # A função abaixo faz essa conversão para os campos de string
+        processed_strings_fields = [
+            {key: (value if value != '' else None) for key, value in row.items()}
+            for row in uploaded_dict
+        ]
 
-        try:
-            response = requests.post("http://localhost:8000/api_post_new_vagas", json=processed_rows)
-            response.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+        # A função abaixo faz essa conversão para os campos de numéricos (apenas o campo salario)
+        processed_number_fields = [
+            {key: (0 if key == "salario" and value is None else value) for key, value in row.items()}
+            for row in processed_strings_fields
+        ]
 
-            st.success("Vagas adicionadas com sucesso!")
-            st.session_state.df_vagas = api_get_file_vagas_norm()
-            df_vagas_filt = st.session_state.df_vagas
+        processed_dict = processed_number_fields
 
-        except requests.exceptions.HTTPError as http_err:
-            # Captura o erro e exibe a mensagem de detalhe
-            error_detail = http_err.response.json().get("detail", "Erro desconhecido.")
-            st.error(f"Erro: {error_detail}", icon="🚨")
+        st.write('### Pré-Visualização das linhas a serem carregadas')
+        st.dataframe(processed_dict, height = 200)
 
+        if st.button("Confirmar Upload", icon="✅"):
+            try:
+                response = requests.post("http://localhost:8000/api_post_new_vagas", json=processed_dict)
+                response.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
 
-    st.dataframe(df_vagas_filt, height = 500)
+                st.session_state.df_vagas = api_get_file_vagas_norm()
+                
+                st.success("Upload Concluído com Sucesso.")
+                time.sleep(4)
+                control0()
 
+            except requests.exceptions.HTTPError as http_err:
+                # Captura o erro e exibe a mensagem de detalhe
+                st.error(f"Erro: {http_err}", icon="🚨")
 
 
 def api_post_llm_search(search_sentence):
@@ -111,22 +117,23 @@ def api_post_llm_search(search_sentence):
 
         print(response)
         if 'success' in response:
-            response_value = response['success']
-            response_value = f"Encontrei 3 vagas para você. Confira o conteúdo delas na sessão lateral da página. IDs: {response_value}"
-            return response_value
+            lista_ids = response['success']
+            response_value = "Encontrei 3 vagas para você. Dá uma olhada"
+            return response_value, lista_ids
         
         else:
             response_value = "☹️ Desculpe, infelizmente não consegui realizar a busca neste momento. Por favor tente mais tarde. \n Motivo: "
             response_value += response['error']
             print(type(response_value))
-            return response_value            
+            lista_ids = ['']
+            return response_value, lista_ids     
     
     else:
         print("Erro: ", response.status_code)
         response_value = "☹️ Desculpe, infelizmente não consegui realizar a busca neste momento. Por favor tente mais tarde. \n Erro: "
         response_value += response.status_code
-        return response_value
-
+        lista_ids = ['']
+        return response_value, lista_ids
 
 
 #-----------------------------------------------FUNÇÕES DE FILTROS----------------------------------------------------
@@ -219,9 +226,32 @@ def msg_wait_a_sec():
 
 def typing_effect(text):
     for phrase in text.split('\n'):
-        time.sleep(1)
+        time.sleep(0.1)
         for word in phrase.split():
             yield word + " "
-            time.sleep(0.05)
+            time.sleep(0.02)
         yield "  \n" 
-#-----------------------------------------------FUNÇÕES DE GRÁFICOS----------------------------------------------------
+
+def buscar_id_na_base(lista_ids):
+
+    df_vagas = st.session_state.df_vagas
+
+    df_ids = pd.DataFrame(lista_ids, columns=['id_vaga'], dtype='string')
+
+    df = pd.merge(df_ids, df_vagas, on='id_vaga', how='left')
+    texto = ''
+
+    for _, row in df.iterrows():
+        texto += f'''
+            {row['titulo_vaga']}
+            Perfil: {row['perfil_vaga']}-{row['nivel_cargo']}
+            Empresa: {row['empresa_contratante']}
+            Local: {row['cidade']} - {row['estado']}
+            Anunciada em: {row['data_anuncio']}
+            Disponível no link: {row['url']}
+            Descrição: {row['descricao']}
+
+
+        '''
+
+    return texto
