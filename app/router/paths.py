@@ -69,7 +69,7 @@ async def read_data_vagas_norm():
 #         reader = csv.DictReader(file)
 #         data = [row for row in reader]  
 
-#     return data 
+#     return data  
 
 
 
@@ -83,7 +83,7 @@ async def read_data_requisitos():
         for row in reader:
             try:
                 # Valida os dados com o modelo Pydantic
-                requisito = SchemaDFRequisito(id_vaga=int(row['id_vaga']), tool=row['tool'])
+                requisito = SchemaDFRequisito(id_vaga=row['id_vaga'], tool=row['tool'])
                 # Adiciona ao resultado no formato original
                 data.append(row)
 

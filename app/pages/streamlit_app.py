@@ -33,13 +33,14 @@ lista_empresa.insert(0, 'Selecione')
 st.sidebar.header('Navegação')
 page = st.sidebar.selectbox("nav",["About", "Job Finder", "Profile Analysis", "Data Download"],label_visibility="hidden")
 
-st.sidebar.header('Filtros')
-filtros_barra_lateral(lista_vagas_perfis, lista_nivel, lista_estado, lista_empresa)
+if page == "Profile Analysis" or page == "Data Download":
+    st.sidebar.header('Filtros')
+    filtros_barra_lateral(lista_vagas_perfis, lista_nivel, lista_estado, lista_empresa)
 
 
-#-------------Filtra os Dataframes----------------
-st.session_state.df_vagas_filt = filtrar_df_vagas(st.session_state.df_vagas, st.session_state.filtro_perfil, st.session_state.filtro_nivel, st.session_state.filtro_uf, st.session_state.filtro_empresa)
-st.session_state.df_ternario_filt = filtrar_df_vagas_ternario(st.session_state.df_vagas, st.session_state.filtro_nivel, st.session_state.filtro_uf, st.session_state.filtro_empresa)
+    #-------------Filtra os Dataframes----------------
+    st.session_state.df_vagas_filt = filtrar_df_vagas(st.session_state.df_vagas, st.session_state.filtro_perfil, st.session_state.filtro_nivel, st.session_state.filtro_uf, st.session_state.filtro_empresa)
+    st.session_state.df_ternario_filt = filtrar_df_vagas_ternario(st.session_state.df_vagas, st.session_state.filtro_nivel, st.session_state.filtro_uf, st.session_state.filtro_empresa)
 
 
 
