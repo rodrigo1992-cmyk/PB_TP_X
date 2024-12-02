@@ -44,5 +44,5 @@ class ApiLlmSearchInput(BaseModel):
     text: str
 
 class ApiLlmSearchOutput(BaseModel):
-    success: List[int] = None  # Para o caso de sucesso
+    success: List[SchemaDFVagas] = None  # Para o caso de sucesso
     error: str = None          # Para o caso de erro

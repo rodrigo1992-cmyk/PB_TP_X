@@ -27,6 +27,7 @@ mistral-inference = "*"
 tf-keras = "*"
 tensorflow-cpu = "*"
 streamlit-navigation-bar = "*"
+google-generativeai = "*"
 
 [dev-packages]
 ipykernel = "*"

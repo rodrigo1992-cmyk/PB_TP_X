@@ -29,20 +29,11 @@ def exibir():
         # Adiciona a mensagem do usuário na variável de ambiente (histórico de mensagens)
         st.session_state.messages.append({"role": "user", "content": input_user})
 
-        # -----------------ASSISTENTE--------------------
-        # Exibe a resposta do assistente
-        with st.chat_message("assistant"): 
-            response = st.write_stream(typing_effect(msg_wait_a_sec()))
-
-        # Adiciona a mensagem do assistente na variável de ambiente (histórico de mensagens)
-        st.session_state.messages.append({"role": "assistant", "content": response})
 
         #-----------------CHAMADA À API-------------------
         with st.chat_message("assistant"): 
-            resp_orig, lista_ids = api_post_llm_search(input_user)
-            response = st.write_stream(typing_effect(resp_orig))
-            response += st.write_stream(typing_effect(buscar_id_na_base(lista_ids)))
-
+            response = api_post_llm_search(input_user)
+            st.write(response)
 
 
         # Adiciona a mensagem do assistente na variável de ambiente (histórico de mensagens)

@@ -38,9 +38,9 @@ def webscrapping_indeed():
 
 def dataPreProcessing():
 
-    Juntar_datasets_vagas(dic_paths['csv_vagas_catho'], dic_paths['csv_vagas_indeed'], dic_paths['csv_vagas'])
+    #Juntar_datasets_vagas(dic_paths['csv_vagas_catho'], dic_paths['csv_vagas_indeed'], dic_paths['csv_vagas'])
     Pre_Processamento_Df_Vagas(dic_paths['csv_vagas'], dic_paths['csv_vagas_norm'])
-    Pre_Processamento_Df_Requisitos(dic_paths['csv_lista_ferramentas'], dic_paths['csv_vagas_norm'], dic_paths['csv_requisitos'])
+    #Pre_Processamento_Df_Requisitos(dic_paths['csv_lista_ferramentas'], dic_paths['csv_vagas_norm'], dic_paths['csv_requisitos'])
 
 
 #-----------------------EXECUÇÃO-----------------------

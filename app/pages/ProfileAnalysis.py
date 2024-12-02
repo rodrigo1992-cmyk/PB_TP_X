@@ -1,5 +1,5 @@
 import streamlit as st
-from app.services.functions_graphs import *
+from utils import *
 
 def exibir():
     st.title("Análise dos Diferentes Perfis de Profissionais de Dados")

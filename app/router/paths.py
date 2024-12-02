@@ -9,7 +9,7 @@ import pandas as pd
 from pydantic import ValidationError, field_validator, BaseModel
 from typing import List
 from fastapi.encoders import jsonable_encoder
-from app.services.llm_search import search_vagas
+from app.services.llm_search import *
 from app.model.api_models import *
 
 
@@ -118,21 +118,34 @@ async def api_post_new_vagas(novas_vagas: list[SchemaDFVagas]):
 
 
 
+
 @router.post("/api_llm_search/")
 async def api_post_llm_search(input_sentence: ApiLlmSearchInput):
 
-    print("Input recebido, formato válido. Invocando a função de busca...")
+    #Chama o Gemini para validar o input
+    print('Input recebido, chamando Gemini para validar')
+    response_gemini = validar_input(input_sentence)
 
-    try:
-        #chamar o modelo
-        result = search_vagas(
+    #Chama o Mpnet para buscar a vaga
+    if response_gemini.get('success') == 'input_valido':
+
+        print('Input validado, chamando Mpnet para buscar a vaga')    
+        response_search = search_vagas(
             model_name = "sentence-transformers/all-mpnet-base-v2", 
             cache_file = "embeddings_cache3.npy", 
             db_path = dic_paths['csv_vagas_norm'],
             input_sentence = input_sentence.text
         )
+        
+        #Chama o Gemini par formatar o resultado
+        if 'success' in response_search:
 
-        return result
-    
-    except Exception as e:
-        return {"error": str(e)}
+            print('Vaga localizada, chamando Gemini para formatar resultado')    
+            description_format = formatar_output(response_search['success']['descricao'])
+            
+            if 'success' in description_format:
+                response_search['success']['descricao'] = description_format['success']
+
+                print('Resultado formatado, será enviado via API')  
+                print(response_search)  
+                return response_search

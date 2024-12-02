@@ -18,13 +18,14 @@ def Pre_Processamento_Df_Vagas(path_csv_vagas, path_csv_vagas_norm):
     #----------- Etapa 1: Ajustar Empresa e Região------------
 
     df_vagas = df_vagas.dropna(subset=['titulo_resumo'])
+    df_vagas['estado'] = df_vagas['estado'].fillna('N/I')
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].str.upper()
     df_vagas['empresa_contratante'] = df_vagas['empresa_contratante'].replace('CLIENTE', 'EMPRESA CONFIDENCIAL').replace('CONFIDENCIAL', 'EMPRESA CONFIDENCIAL').replace('********', 'EMPRESA CONFIDENCIAL')
 
     df_vagas['data_anuncio'] = pd.to_datetime(df_vagas['data_anuncio']).dt.date
 
     #Adicionar uma coluna de região (Sul, Sudeste, Centro-Oeste, Nordeste, Norte) a partir da coluna de estado
-    df_vagas['regiao'] = df_vagas['estado'].map({'AC': 'Norte', 'AL': 'Nordeste', 'AP': 'Norte', 'AM': 'Norte', 'BA': 'Nordeste', 'CE': 'Nordeste', 'DF': 'Centro-Oeste', 'ES': 'Sudeste', 'GO': 'Centro-Oeste', 'MA': 'Nordeste', 'MT': 'Centro-Oeste', 'MS': 'Centro-Oeste', 'MG': 'Sudeste', 'PA': 'Norte', 'PB': 'Nordeste', 'PR': 'Sul', 'PE': 'Nordeste', 'PI': 'Nordeste', 'RJ': 'Sudeste', 'RN': 'Nordeste', 'RS': 'Sul', 'RO': 'Norte', 'RR': 'Norte', 'SC': 'Sul', 'SP': 'Sudeste', 'SE': 'Nordeste', 'TO': 'Norte'})
+    df_vagas['regiao'] = df_vagas['estado'].map({'AC': 'Norte', 'AL': 'Nordeste', 'AP': 'Norte', 'AM': 'Norte', 'BA': 'Nordeste', 'CE': 'Nordeste', 'DF': 'Centro-Oeste', 'ES': 'Sudeste', 'GO': 'Centro-Oeste', 'MA': 'Nordeste', 'MT': 'Centro-Oeste', 'MS': 'Centro-Oeste', 'MG': 'Sudeste', 'PA': 'Norte', 'PB': 'Nordeste', 'PR': 'Sul', 'PE': 'Nordeste', 'PI': 'Nordeste', 'RJ': 'Sudeste', 'RN': 'Nordeste', 'RS': 'Sul', 'RO': 'Norte', 'RR': 'Norte', 'SC': 'Sul', 'SP': 'Sudeste', 'SE': 'Nordeste', 'TO': 'Norte', 'N/I': 'Não Informado'})
 
     print("QTD linhas após etapa 1: ", df_vagas.shape)
 
