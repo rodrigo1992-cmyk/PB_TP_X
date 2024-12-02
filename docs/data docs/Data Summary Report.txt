@@ -1,11 +1,17 @@
 -----------DATA SUMMARY REPORT----------
-"id_vaga","","titulo_vaga","titulo_resumo","faixa_salarial","empresa_contratante","estado","cidade","url","descricao","beneficios","regimeContrato"
+'''
+Estrutura de dados dos dois arquivos finais processados, que servem como inputs para o App Streamlit
+'''
 
-FONTE: https://www.catho.com.br/vagas/{cargo}/?page={page}
+
+### vagas_norm.csv ###
+"id_vaga","data_anuncio","titulo_vaga","titulo_resumo","faixa_salarial","empresa_contratante","estado","cidade","url","descricao","beneficios","regimeContrato"
+
+FONTES: https://www.catho.com.br e https://br.indeed.com
 
 CAMPO: id_vaga
-    TIPO: Integer
-    OBJETIVO DE USO: Identificação do ID da vaga dentro do site do Catho
+    TIPO: String
+    OBJETIVO DE USO: Identificação do ID da vaga dentro do site do Catho ou Indeed
 
 CAMPO: data_anuncio
     TIPO: Date
@@ -43,14 +49,6 @@ CAMPO: descricao
     TIPO: String
     OBJETIVO DE USO: Necessário para que o modelo de LLM consiga obter as funções e requisitos
 
-CAMPO: FUNÇÕES (CONTEÚDO GERADO PELO MODELO LLM)
-    TIPO: String
-    OBJETIVO DE USO: Desejável para agrupar vagas com perfis semelhantes
-
-CAMPO: REQUISITOS (CONTEÚDO GERADO PELO MODELO LLM)
-    TIPO: String
-    OBJETIVO DE USO: Informação principal, necessário para identificar os conhecimentos exigidos pelas empresas.
-
 CAMPO: regimeContrato
     TIPO: String
     OBJETIVO DE USO: Separar na análise, pois contratações CLT ou PJ podem ter grande variação salarial.
@@ -58,3 +56,16 @@ CAMPO: regimeContrato
 CAMPO: beneficios
     TIPO: String
     OBJETIVO DE USO: Informação extra
+
+
+
+### requisitos.csv ###
+"id_vaga","tool"
+
+CAMPO: id_vaga
+    TIPO: String
+    OBJETIVO DE USO: Identificação do ID da vaga dentro do site do Catho
+
+CAMPO: tool
+    TIPO: String
+    OBJETIVO DE USO: Relação de todos os softwares e tecnologias citados na descrição de cada vaga [Uma linha para cada software presente na descrição]. 

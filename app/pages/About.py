@@ -4,18 +4,32 @@ from utils import *
 
 def exibir():
     st.title("Radar de Vagas DS")
-    st.write("**Escopo**: Ao consolidar e analisar as competências requisitadas por cada empresa, o projeto apoia a inserção de profissionais no mercado de trabalho, contribuindo para a geração de empregos e o desenvolvimento de uma força de trabalho com qualificação alinhada ao mercado. Isso não só ajuda os profissionais a encontrar melhores oportunidades de trabalho, mas também fortalece a economia ao atender à demanda das empresas por talentos qualificados. Este visa atender à ODS 8 (Trabalho Decente e Crescimento Econômico).")
     st.write("""
-    **Objetivos**: Desenvolver uma aplicação web que consolide anúncios de vagas de cientista de dados no LinkedIn, analisando as competências e funções mais solicitadas por nível de vaga.
-    * Coletar dados de anúncios de vagas de cientista de dados no LinkedIn.
-    * Utilizar modelo LLM para analisar descrições de vagas e identificar competências e funções especificadas.
-    * Desenvolver visualizações em Streamlit para apresentar os resultados.
-    * Oferecer insights para candidatos, recrutadores e instituições de ensino sobre tendências de mercado.
-    """)
+             ## ESCOPO
+             Ao consolidar e analisar as competências requisitadas por cada empresa, o projeto apoia a inserção de profissionais no mercado de trabalho, contribuindo para a geração de empregos e o desenvolvimento de uma força de trabalho com qualificação alinhada ao mercado. Isso não só ajuda os profissionais a encontrar melhores oportunidades de trabalho, mas também fortalece a economia ao atender à demanda das empresas por talentos qualificados. Este visa atender à ODS 8 (Trabalho Decente e Crescimento Econômico).
+             
+             ## OBJETIVOS 
+             Disponibilizar vagas de profissionais de dados, analisando as competências e funções mais solicitadas por nível de vaga.
+             * Coletar dados de anúncios de vagas de cientista de dados no LinkedIn.
+             * Utilizar modelo LLM para analisar descrições de vagas e identificar competências e funções especificadas.
+             * Desenvolver visualizações em Streamlit para apresentar os resultados.
+             * Oferecer insights para candidatos, recrutadores e instituições de ensino sobre tendências de mercado.
+             
+             ## SESSÕES DO APP
 
-    st.write("Acesse este link para visualizar a página de onde serão coletados os dados, já com exemplo de filtro. (https://www.catho.com.br/vagas/cientista-de-dados/?page=1")
-    st.write("Link para uma inspiração visual (https://www.behance.net/gallery/198960873/Job-finder-dashboard?tracking_source=search_projects|job+dashboard&l=2)")
-    st.write("Abaixo, segue um exemplo/amostra dos dados que serão coletados:")
+             ### Data Analysis
+             Sessçao dedicada a compreensão e comparação dos diferentes profissionais de dados, analisando volumetria de vagas, distribuição geográfica, faixa salarial e competências mais solicitadas por perfil.
+             [PRINT DA PAGINA]
+
+             ### Job Finder
+             Chat bot alimentado por IA que auxilia o usuário a encontrar vagas de emprego de acordo com a descrição desejada.
+             [PRINT DA PAGINA]
+
+             ### Data Download
+             Funções para download da base de dados de vagas, de acordo com os filtros selecionados pelo usuário, ou para cadastro de novas vagas através do download de base em csv.
+             [PRINT DA PAGINA]
+
+            """)
 
     df = pd.read_csv(r'app\data\processed\Exemplo_Amostra_Dados.csv')
     st.dataframe(df)
