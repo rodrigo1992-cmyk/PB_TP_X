@@ -11,7 +11,7 @@ def exibir():
 
              ---
              ## OBJETIVOS 
-             Disponibilizar vagas de profissionais de dados, analisando as competências e funções mais solicitadas por nível de vaga.
+             Disponibilizar vagas para profissionais de dados, analisando as competências e funções mais solicitadas por nível de vaga.
              * Coletar dados de anúncios de vagas de cientista de dados no LinkedIn.
              * Utilizar modelo LLM para analisar descrições de vagas e identificar competências e funções especificadas.
              * Desenvolver visualizações em Streamlit para apresentar os resultados.
@@ -31,6 +31,11 @@ def exibir():
              
              ---
              ## DOCUMENTAÇÃO
-             **Project Charter**
+             * **Project Charter:** [Clique Aqui](https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PB_TP5/docs/bussiness%20docs/Project%20Charter.png)
+             * **Bussiness Model Canvas:** [Clique Aqui](https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PB_TP5/docs/bussiness%20docs/Bussiness%20Model%20Canvas.png)
+             * **Solution Architecture Diagram:** [Clique Aqui](https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PB_TP5/docs/data%20docs/Solution%20Architecture%20Diagram.pptx)
+             * **Model Report:** [Clique Aqui](https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PB_TP5/docs/data%20docs/Model%20Report.md)
+             * **Data Summary Report:** [Clique Aqui](https://github.com/rodrigo1992-cmyk/PB_TP_X/blob/PB_TP5/docs/data%20docs/Data%20Summary%20Report.txt)
+
             """)
 
