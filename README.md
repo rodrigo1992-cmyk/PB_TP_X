@@ -37,9 +37,9 @@ Exemplo: Um agente pode ser configurado para analisar dados financeiros e de sus
 > O Sistema utiliza Modelos de LLM para duas aplicações diferentes:
 > * Modelo Local para Extração de entidades nomeadas (NER) das descrições de vagas, para criação de uma base de dados de requisitos, que é utilizada em filtros e gráficos.
 > * Chat para busca de vagas por similaridade com a descrição inputada pelo usuário via chat no streamlit, feito em 3 etapas:
->   - **1° Etapa** - O input do usuário é passado para o GEMINI para que ele avalie se é um input para busca ou uma frase indiferente, como um "Bom dia", neste caso ele interage com o usuário pedindo que seja informada a descrição de uma vaga.
+>   - **1° Etapa** - O input do usuário é passado para o GEMINI para que ele avalie se é um input para busca ou uma frase indiferente, como um "Bom dia", neste caso ele interage com o usuário pedindo que seja informada a descrição de uma vaga. Utilizada engenharia de prompt para orientar a avaliar o input para instruir quanto ao retorno no caso de um input válido ou inválido.
 >   - **2° Etapa** - Se o input for válido é executado um modelo local que usa embedding para calcular a semelhança entre a setença inputada e as descrições das vagas na base de dados.
->   - **3° Etapa** - Os dados da vaga localizada são passados novamente para o Gemini, para que ele estruture o conteúdo de forma padronizada e formate como markdown, para melhorar a visualização ao exibir no chat.
+>   - **3° Etapa** - Os dados da vaga localizada são passados novamente para o Gemini, para que ele estruture o conteúdo de forma padronizada e formate como markdown, para melhorar a visualização ao exibir no chat. Utilizada engenharia de prompt para orientar o modelo a como separar o conteúdo em sessões e para que ele siga o template de markdown fornecido.
 
 # 3. Desenvolvimento de um Dashboard Final com Modelos de IA: 
 Após implementar a funcionalidade escolhida (memória conversacional, sumarização ou agente inteligente), integre-a a um dashboard interativo que demonstre claramente o ciclo de Ciência de Dados, desde a coleta dos dados até a geração de insights. O dashboard deve:
