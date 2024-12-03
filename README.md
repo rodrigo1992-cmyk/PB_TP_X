@@ -34,9 +34,12 @@ Implemente agentes inteligentes capazes de resolver problemas complexos com base
 **Ciência de Dados Aplicada**: Esses agentes podem automatizar a análise dos dados coletados sobre indicadores de desempenho ESG, sugerindo recomendações ou previsões baseadas em padrões encontrados nos dados.
 Exemplo: Um agente pode ser configurado para analisar dados financeiros e de sustentabilidade, propondo ações corretivas ou recomendações baseadas em benchmarks de governança, utilizando modelos locais ou APIs de IA online.
 
-O Sistema utiliza Modelos de LLM para duas aplicações diferentes:
-* Modelo Local para Extração de entidades nomeadas (NER) das descrições de vagas, para criação de uma base de dados de requisitos, que é utilizada em filtros e gráficos.
-* Modelo de NLP para busca de vagas por similaridade com a descrição inputada pelo usuário via chat no streamlit.
+> O Sistema utiliza Modelos de LLM para duas aplicações diferentes:
+> * Modelo Local para Extração de entidades nomeadas (NER) das descrições de vagas, para criação de uma base de dados de requisitos, que é utilizada em filtros e gráficos.
+> * Chat para busca de vagas por similaridade com a descrição inputada pelo usuário via chat no streamlit, feito em 3 etapas:
+>   - **1° Etapa** - O input do usuário é passado para o GEMINI para que ele avalie se é um input para busca ou uma frase indiferente, como um "Bom dia", neste caso ele interage com o usuário pedindo que seja informada a descrição de uma vaga.
+>   - **2° Etapa** - Se o input for válido é executado um modelo local que usa embedding para calcular a semelhança entre a setença inputada e as descrições das vagas na base de dados.
+>   - **3° Etapa** - Os dados da vaga localizada são passados novamente para o Gemini, para que ele estruture o conteúdo de forma padronizada e formate como markdown, para melhorar a visualização ao exibir no chat.
 
 # 3. Desenvolvimento de um Dashboard Final com Modelos de IA: 
 Após implementar a funcionalidade escolhida (memória conversacional, sumarização ou agente inteligente), integre-a a um dashboard interativo que demonstre claramente o ciclo de Ciência de Dados, desde a coleta dos dados até a geração de insights. O dashboard deve:

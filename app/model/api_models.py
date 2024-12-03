@@ -1,24 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-class ResponseModelVaga(BaseModel):
-    id_vaga: str
-    data_anuncio: str
-    titulo_vaga: str
-    titulo_resumo: str
-    faixa_salarial: str
-    empresa_contratante: str
-    estado:str
-    cidade: str 
-    url: str
-    descricao: str
-    beneficios: str
-    regimeContrato: str
-    regiao: str
-    perfil_vaga: str
-    nivel_cargo: str
-    salario: int
-
 class SchemaDFVagas(BaseModel):
     id_vaga: str
     data_anuncio: str
@@ -44,5 +26,4 @@ class ApiLlmSearchInput(BaseModel):
     text: str
 
 class ApiLlmSearchOutput(BaseModel):
-    success: List[SchemaDFVagas] = None  # Para o caso de sucesso
-    error: str = None          # Para o caso de erro
+    success: List[SchemaDFVagas] = None  

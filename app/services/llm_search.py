@@ -5,8 +5,21 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 import csv
-    
+from fastapi import HTTPException
+
 def validar_input(input_sentence):
+    '''
+    Função que recebe a frase que o usuário inseriu no chat e chama o Gemini para validar se é um input válido para busca de vagas ou se é uma frase irrelevante.
+
+    Args:
+    input_sentence (str): Frase que o usuário inseriu no chat
+
+    Returns:
+    response_text (dict): Dicionário com a resposta do Gemini
+
+    Raises:
+    HTTPException: Error 500 - Se houver um erro ao chamar o Gemini para validar o input
+    '''
     
     prompt = f"""
     Você é um mecanismo de busca de vagas de emprego. Sua tarefa é avaliar a [ENTRADA] do usuário e determinar se ela é uma solicitação válida para busca de emprego ou uma frase irrelevante, como uma saudação ou reclamação.
@@ -31,29 +44,56 @@ def validar_input(input_sentence):
     #[ENTRADA]#
     {input_sentence}
     """
-    load_dotenv()
-    key_gemini = os.getenv('GEMINI_KEY')
+    try:
+        load_dotenv()
+        key_gemini = os.getenv('GEMINI_KEY')
 
-    genai.configure(api_key=key_gemini)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(prompt)
+        genai.configure(api_key=key_gemini)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
 
-    response_text = response.text.replace('\n', '')
+        response_text = response.text.replace('\n', '')
 
-    return {"success": response_text}
+        if response_text == 'input_valido':
+            return {"success": "input_valido"}
+        else:
+            return {"message": response_text}
 
+        
+    
+    except: raise HTTPException(status_code=500, detail="⛔ Erro ao invocar o Gemini para validar o input")
+    
 
-def search_vagas(model_name, cache_file, db_path, input_sentence):     
+def search_vagas(model_name, cache_file, db_path, input_sentence):
+    '''
+    Função que recebe a frase que o usuário inseriu no chat e chama o modelo de LLM para buscar a vaga mais similar.
+
+    Args:
+    model_name (str): Nome do modelo de LLM
+    cache_file (str): Nome do arquivo de cache
+    db_path (str): Caminho do arquivo csv com as vagas
+    input_sentence (str): Frase que o usuário inseriu no chat
+
+    Returns:
+    dict_result (dict): Dicionário com a vaga encontrada
+
+    Raises:
+    HTTPException: Error 500 - Se houver um erro ao instanciar o SentenceTransformer
+    HTTPException: Error 500 - Se houver um erro ao carregar o cache existente do modelo de LLM
+    HTTPException: Error 500 - Se houver um erro ao criar o embeddings da base de dados
+    HTTPException: Error 422 - Se houver um erro ao realizar o embedding do input_sentence
+    HTTPException: Error 500 - Se houver um erro ao calcular as similaridades
+    '''
     
     # Inicializar o modelo
     try: model = SentenceTransformer(model_name)
-    except: {"error": "⛔ Erro ao instanciar o modelo"}
+    except: raise HTTPException(status_code=500, detail="⛔ Erro ao instanciar o SentenceTransformer")
 
     # Verificar se o cache já existe
     if os.path.exists(cache_file):
         try: sentence_embeddings = np.load(cache_file)
-        except: return {"error": "⛔ Erro ao carregar o cache existente do modelo de LLM."}
-
+        except: raise HTTPException(status_code=500, detail="⛔ Erro ao carregar o cache existente do modelo de LLM")
+    
     else:
         try:
             df = pd.read_csv(db_path)
@@ -63,18 +103,20 @@ def search_vagas(model_name, cache_file, db_path, input_sentence):
 
             sentence_embeddings = model.encode(list(df_embd.values()))
             np.save(cache_file, sentence_embeddings)
-        except: return {"error": "⛔ Erro ao criar o embeddings da base de dados"}
+        except:
+            raise HTTPException(status_code=500, detail="⛔ Erro ao criar o embeddings da base de dados")
 
 
     # Codificar a frase de entrada (input)
     
     try: input_embedding = model.encode(input_sentence)
-    except: return {"error": "⛔ Erro ao realizar o embedding do input_sentence"}
+    except: raise HTTPException(status_code=422, detail="⛔ Erro ao realizar o embedding do input_sentence")
 
     # Calcular a similaridade entre a frase de entrada e o conjunto de dados
     try:
         similarities = util.cos_sim(input_embedding, sentence_embeddings).cpu().numpy().flatten()  # Garantir que seja um vetor 1D
-    except: return {"error": "⛔ Erro ao calcular as similaridades"}
+    except:
+        raise HTTPException(status_code=500, detail="⛔ Erro ao calcular as similaridades")
 
     index_vaga = np.argsort(similarities)[::-1][:1]
 
@@ -90,17 +132,30 @@ def search_vagas(model_name, cache_file, db_path, input_sentence):
 
 
 def formatar_output(output_content):
+    '''
+    Função que recebe a descrição da vaga e chama o Gemini para formatar o texto.
+
+    Args:
+    output_content (str): Descrição da vaga
+
+    Returns:
+    response (dict): Dicionário com a descrição da vaga formatada
+
+    Raises:
+    HTTPException: Error 500 - Se houver um erro ao invocar o Gemini para formatar a descrição da vaga
+    '''
     
     prompt = f"""
     Por favor, organize e formate a [DESCRIÇÃO DA VAGA] a seguir em uma estrutura clara e legível. 
     Não crie nenhum texto, somente utilize o conteúdo da [DESCRIÇÃO DA VAGA]. 
     Corrija erros de pontuação e utilize Markdown para a formatação, garantindo que o texto seja fácil de ler e bem estruturado.
+    Não adicione frases duplicadas. Se não houver conteúdo para um dos tópicos, não inclua a seção.
     
     UTILIZE A SEGUINTE ESTRUTURA:
     Sobre a Empresa: Escreva uma breve introdução sobre a empresa, somente se houver na descrição.
-    Responsabilidades e Atribuições: Liste as principais responsabilidades da posição em formato de lista.
-    Requisitos e Qualificações: Liste os requisitos e qualificações necessárias, também em formato de lista.
-    Diferenciais: Inclua uma seção para diferenciais que podem ser considerados um plus para a vaga.
+    Responsabilidades e Atribuições: Liste as principais responsabilidades da posição em formato de lista. São as funções e tarefas que o candidato irá desempenhar.
+    Requisitos e Qualificações: Liste os requisitos e qualificações necessárias, também em formato de lista. São os hard-skills que o candidato deve possuir.
+    Diferenciais: Inclua uma seção para diferenciais que podem ser considerados um plus para a vaga. São os hard-skills listados como desejáveis, ou soft-skills.
     
     EXEMPLO PARA FORMATAÇÃO EM MARKDOWN:
     ### Sobre a Empresa
@@ -122,11 +177,14 @@ def formatar_output(output_content):
     DESCRIÇÃO DA VAGA:
     {output_content}
     """
-    load_dotenv()
-    key_gemini = os.getenv('GEMINI_KEY')
+    try:
+        load_dotenv()
+        key_gemini = os.getenv('GEMINI_KEY')
 
-    genai.configure(api_key=key_gemini)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(prompt)
+        genai.configure(api_key=key_gemini)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
 
-    return {"success": response.text}
+        return {"success": response.text}
+    except:
+        raise HTTPException(status_code=500, detail="⛔ Erro ao invocar o Gemini para formatar a descrição da vaga")

@@ -2,6 +2,10 @@ import streamlit as st
 from utils import *
 
 def exibir():
+    if 'load_ProfileAnalysis' not in st.session_state:
+        st.session_state.load_ProfileAnalysis = 1
+        progress_bar(3, "Carregando a página")
+
     st.title("Análise dos Diferentes Perfis de Profissionais de Dados")
     col_a, col_b = st.columns(2)
     with col_a:

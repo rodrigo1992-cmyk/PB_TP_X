@@ -7,12 +7,22 @@ from utils import *
 
 st.set_page_config(layout="wide", page_title="DataJob Finder", page_icon="🔎")
 
+if 'load_app' not in st.session_state:
+    st.session_state.load_app = 1
+    progress_bar(5,"Inicializando o Aplicativo")
+
 #-------------Importa todos os DFs necessários----------------
-try: st.session_state.df_vagas = api_get_file_vagas_norm()
-except: st.write("### Falha na requisição à API para obtenção da base de vagas.")
+try: 
+    st.session_state.df_vagas = api_get_file_vagas_norm()
+
+except Exception as e:
+    st.error(f"Falha na requisição à API para obtenção da base de vagas. {e}", icon="🚨", )
+    st.stop()
 
 try: st.session_state.df_requisitos = api_get_file_requisitos()
-except: st.write("### Falha na requisição à API para obtenção da base de requisitos.")
+except Exception as e:
+    st.error(f"Falha na requisição à API para obtenção da base de requisitos. {e}", icon="🚨", )
+    st.stop()
 
 
 #-------------Cria as variáveis necessárias para os filtros----------------

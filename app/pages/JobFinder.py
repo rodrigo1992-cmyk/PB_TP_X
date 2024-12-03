@@ -5,6 +5,10 @@ from utils import *
 
 
 def exibir():
+    if 'load_JobFinder' not in st.session_state:
+        st.session_state.load_JobFinder = 1
+        progress_bar(2, "Carregando a página")
+
     st.title("Buscador de vagas")
 
     # -----------------INICIALIZAÇÃO--------------------
@@ -31,9 +35,18 @@ def exibir():
 
 
         #-----------------CHAMADA À API-------------------
+        # Adicionar spinner enquanto a API está sendo chamada
+
         with st.chat_message("assistant"): 
-            response = api_post_llm_search(input_user)
-            st.write(response)
+            with st.spinner("Aguarde alguns instantes..."):    
+                try:
+                    response = api_post_llm_search(input_user)
+                    response.raise_for_status()
+
+                    st.write(response)
+                    
+                except requests.exceptions.HTTPError as http_err:
+                    st.error(f"Erro: {http_err}", icon="🚨")
 
 
         # Adiciona a mensagem do assistente na variável de ambiente (histórico de mensagens)

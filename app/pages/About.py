@@ -3,6 +3,9 @@ import pandas as pd
 from utils import *
 
 def exibir():
+    if 'load_About' not in st.session_state:
+        st.session_state.load_About = 1
+        progress_bar(1, "Carregando a página")
 
     st.title("Radar de Vagas DS")
     st.write("""

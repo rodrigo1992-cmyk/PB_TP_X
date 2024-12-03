@@ -14,6 +14,9 @@ def control0():
 
 
 def exibir():
+    if 'load_DtDownload' not in st.session_state:
+        st.session_state.load_DtDownload = 1
+        progress_bar(2, "Carregando a página")
     #Fazer upload de um arquivo CSV e apendar linhas ao dataframe
 
     #------------------------- CONTAINER DE DOWNLOAD DE BASES-----------------------------------

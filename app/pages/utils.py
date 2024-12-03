@@ -20,8 +20,8 @@ def api_get_file_vagas_norm():
     '''
     Função que acessa a API para pegar o arquivo vagas_norm.csv
     '''
-
     response = requests.get("http://localhost:8000/csv_vagas_norm")
+    response.raise_for_status()
     
     if response.status_code == 200:
         data = response.json()
@@ -45,16 +45,13 @@ def api_get_file_requisitos():
     '''
 
     response = requests.get("http://localhost:8000/csv_requisitos")
-    
+    response.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+
     if response.status_code == 200:
         data = response.json()
         df = pd.DataFrame(data)
 
         return df
-    else:
-        st.error("Erro ao acessar a API: {}".format(response.status_code))
-
-
 
 
 def control0():
@@ -68,27 +65,40 @@ def control0():
 
 
 def api_post_new_vagas(uploaded_file):
+    '''
+    Função que acessa a API para postar novas vagas
+    args:
+        uploaded_file: arquivo csv com as novas vagas
+    
+    return:
+        response: resposta de sucesso ou erro da API
+    '''
 
     if uploaded_file is not None:
 
-        #converter o csv em dicionário
-        uploaded_file = io.TextIOWrapper(uploaded_file, encoding='utf-8')
-        reader = csv.DictReader(uploaded_file)
-        uploaded_dict = [row for row in reader]
+        try:
+            #converter o csv em dicionário
+            uploaded_file = io.TextIOWrapper(uploaded_file, encoding='utf-8')
+            reader = csv.DictReader(uploaded_file)
+            uploaded_dict = [row for row in reader]
+
 
         
-        # No Json os valores em branco devem ser convertidos para None (Em campos de String) e para Zero (em campos numéricos)
-        # A função abaixo faz essa conversão para os campos de string
-        processed_strings_fields = [
-            {key: (value if value != '' else None) for key, value in row.items()}
-            for row in uploaded_dict
-        ]
+            # No Json os valores em branco devem ser convertidos para None (Em campos de String) e para Zero (em campos numéricos)
+            # A função abaixo faz essa conversão para os campos de string
+            processed_strings_fields = [
+                {key: (value if value != '' else None) for key, value in row.items()}
+                for row in uploaded_dict
+            ]
 
-        # A função abaixo faz essa conversão para os campos de numéricos (apenas o campo salario)
-        processed_number_fields = [
-            {key: (0 if key == "salario" and value is None else value) for key, value in row.items()}
-            for row in processed_strings_fields
-        ]
+            # A função abaixo faz essa conversão para os campos de numéricos (apenas o campo salario)
+            processed_number_fields = [
+                {key: (0 if key == "salario" and value is None else value) for key, value in row.items()}
+                for row in processed_strings_fields
+            ]
+        except:
+            st.error("Erro ao ler ou tratar o arquivo CSV", icon="🚨")
+            return
 
         processed_dict = processed_number_fields
 
@@ -100,29 +110,44 @@ def api_post_new_vagas(uploaded_file):
                 response = requests.post("http://localhost:8000/api_post_new_vagas", json=processed_dict)
                 response.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
                 
-                #Dá um refresh na base df_vagas que estava no session_state, para que apareçam as novas vagas carregadas
-                st.session_state.df_vagas = api_get_file_vagas_norm()
-                
-                st.success("Upload Concluído com Sucesso.")
-                time.sleep(4)
-                control0()
+                if response.status_code == 200:
+                    #Dá um refresh na base df_vagas que estava no session_state, para que apareçam as novas vagas carregadas
+                    st.session_state.df_vagas = api_get_file_vagas_norm()
+                    
+                    st.success("Upload Concluído com Sucesso.")
+                    time.sleep(4)
+                    control0()
 
             except requests.exceptions.HTTPError as http_err:
                 # Captura o erro e exibe a mensagem de detalhe
                 st.error(f"Erro: {http_err}", icon="🚨")
 
 
+def api_post_llm_search(search_sentence: str):
+    '''
+    Função que acessa a API para fazer a busca de uma vaga
+    args:
+        search_sentence: frase de busca
+        
+    return:
+        content_str: string formatado como markdown para exibição do texto no chat, com o conteúdo da vaga.
 
-
-def api_post_llm_search(search_sentence):
+    '''
     dict_sentence = {'text': search_sentence}
 
     print("Será feito o request à API")
-    response = requests.post("http://localhost:8000/api_llm_search", json=dict_sentence)
-    print("Resposta recebida")
+
+    try:
+        response = requests.post("http://localhost:8000/api_llm_search", json=dict_sentence)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as http_err:
+        st.error(f"Erro: {http_err}", icon="🚨")
 
     if response.status_code == 200:
         content = response.json()
+        if 'message' in content:
+            return content['message']
+            
         if 'success' in content:
             y = content['success']
             content_str = f"""
@@ -137,13 +162,19 @@ def api_post_llm_search(search_sentence):
 
 #-----------------------------------------------FUNÇÕES DE FILTROS----------------------------------------------------
 
-# @st.cache_data
-# def import_df(path):
-#     df = pd.read_csv(path)
-#     return df
-
-
 def filtrar_df_vagas(df_vagas: pd.DataFrame, filtro_perfil: str, filtro_nivel: str, filtro_uf: str, filtro_empresa: str):
+    '''
+    Função para filtrar o dataframe de vagas
+    args:
+        df_vagas: passar o dataframe vagas_norm
+        filtro_perfil: seleção entre analista, cientista e engenheiro de dados
+        filtro_nivel: seleção do nível do cargo [junior, pleno e senior]
+        filtro_uf: uf selecionado pelo usuário
+        filtro_empresa: empresa selecionada pelo usuário
+
+    return:
+        df: dataframe filtrado    
+    '''
 
     #Filtro o dataframe de vagas
     df = df_vagas.copy()
@@ -161,6 +192,17 @@ def filtrar_df_vagas(df_vagas: pd.DataFrame, filtro_perfil: str, filtro_nivel: s
 
 
 def filtrar_df_vagas_ternario(df_vagas: pd.DataFrame, filtro_nivel: str, filtro_uf: str, filtro_empresa: str):
+    '''
+    Função para filtrar o dataframe de vagas para o gráfico do diagrama de ternário
+    args:
+        df_vagas: passar o dataframe vagas_norm (original, sem filtros aplicados, pois não pode ter filtro de perfil)
+        filtro_nivel: seleção do nível do cargo [junior, pleno e senior]
+        filtro_uf: uf selecionado pelo usuário
+        filtro_empresa: empresa selecionada pelo usuário
+
+    return:
+        df: dataframe filtrado
+    '''
 
     #Filtro o dataframe de vagas
     df = df_vagas.copy()
@@ -183,7 +225,13 @@ def filtros_barra_lateral(lista_vagas: list, lista_nivel: list, lista_uf: list, 
 
     '''Função que cria os filtros na barra lateral da aplicação
         Args:
-            lista_vagas (list): Lista os perfis distintos das vagas
+            lista_vagas (list): Lista de distintos com os perfis de vagas
+            lista_nivel (list): Lista de distintos com os níveis de cargo
+            lista_uf (list): Lista de distintos com os estados
+            lista_empresa (list): Lista de distintos com as empresas
+
+        Return:
+            None - Os resultados são salvos em variáveis de sessão
     '''
     #Inicializo as variáveis de sessão
     if 'filtro_perfil' not in st.session_state:
@@ -206,7 +254,15 @@ def filtros_barra_lateral(lista_vagas: list, lista_nivel: list, lista_uf: list, 
 
 
 
-def typing_effect(text):
+def typing_effect(text: str):
+    '''
+    Função para simular um efeito de digitação.
+    args:
+        text (str): texto a ser simulado o efeito de digitação
+    
+    return:
+        yield: Devolve um dígito por vez, com um intervalo entre cada um
+    '''
     for phrase in text.split('\n'):
         time.sleep(0.1)
         for word in phrase.split():
@@ -214,10 +270,22 @@ def typing_effect(text):
             time.sleep(0.02)
         yield "  \n" 
 
+def progress_bar(segundos: int, message: str):
+    '''
+    Função para simular um efeito de barra de progresso
+    '''
+    my_bar = st.progress(0, text=message)
+    
+    for percent_complete in range(100):  # 0 a 99
+        time.sleep(segundos / 100)  # Ajusta o tempo de espera
+        my_bar.progress(percent_complete + 1, text=message)
+    
+    time.sleep(1)  # Pausa final antes de limpar
+    my_bar.empty()
 
 #-----------------------------------------------CRIAÇÃO DE GRÁFICOS----------------------------------------------------
 
-def plot_historico_vagas(df):
+def plot_historico_vagas(df: pd.DataFrame):
     '''
     Função para plotar histórico de vagas publicadas por semana
     args:
@@ -237,7 +305,7 @@ def plot_historico_vagas(df):
     st.plotly_chart(fig)
 
 
-def plot_box_salarios(df):
+def plot_box_salarios(df: pd.DataFrame):
     '''
     args:
         df: usar o dataframe vagas_norm
@@ -252,7 +320,7 @@ def plot_box_salarios(df):
     
     st.plotly_chart(fig)
 
-def plot_dist_senioridade(df):
+def plot_dist_senioridade(df: pd.DataFrame):
     '''
     args:
         df: usar o dataframe vagas_norm
@@ -268,7 +336,7 @@ def plot_dist_senioridade(df):
     fig.update_traces(textinfo='label+percent parent')
     st.plotly_chart(fig)
 
-def plot_dist_regiao(df):
+def plot_dist_regiao(df: pd.DataFrame):
     '''
     args:
         df: usar o dataframe vagas_norm
@@ -281,7 +349,7 @@ def plot_dist_regiao(df):
     fig.update_traces(textinfo='label+percent parent')
     st.plotly_chart(fig)
 
-def plot_wordcloud(df):
+def plot_wordcloud(df: pd.DataFrame):
     '''
     Função para plotar um wordcloud com as palavras mais frequentes
     args:
@@ -301,7 +369,7 @@ def plot_wordcloud(df):
     st.pyplot(plt)
 
 
-def plot_ternario_requisitos(df_vagas_completo, df_ternario_filt, df_reqs):
+def plot_ternario_requisitos(df_vagas_completo: pd.DataFrame, df_ternario_filt: pd.DataFrame, df_reqs: pd.DataFrame):
     '''
     Função para plotar um gráfico ternário com os requisitos de ferramentas por perfil profissional
     args:
@@ -382,7 +450,13 @@ def plot_ternario_requisitos(df_vagas_completo, df_ternario_filt, df_reqs):
         st.plotly_chart(fig)
 
 
-def top_requisitos(df_vagas, df_reqs):
+def top_requisitos(df_vagas: pd.DataFrame, df_reqs: pd.DataFrame):
+    '''
+    Função para plotar um gráfico de barras empilhadas com as 10 ferramentas mais solicitadas
+    args:
+        df_vagas: usar o dataframe vagas_norm
+        df_reqs: usar o dataframe requisitos
+    '''
 
     #Junta os dois dataframes para trazer o perfil da vaga (necessário para usar nos filtros futuramente)
     df_vagas = df_vagas[['id_vaga', 'perfil_vaga']]
