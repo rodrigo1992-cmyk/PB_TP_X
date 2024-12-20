@@ -41,7 +41,6 @@ def exibir():
             with st.spinner("Aguarde alguns instantes..."):    
                 try:
                     response = api_post_llm_search(input_user)
-                    response.raise_for_status()
 
                     st.write(response)
                     
