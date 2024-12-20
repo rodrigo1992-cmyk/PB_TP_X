@@ -2,7 +2,7 @@ import sys
 sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\PB_TP_X')
 
 import os
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException, FastAPI
 import csv
 import json
 import pandas as pd
@@ -40,7 +40,8 @@ def dicionario_paths():
 #------------------------Funções de API------------------------
 
 dic_paths = dicionario_paths()
-router = APIRouter()
+router = FastAPI()
+
 
 
 

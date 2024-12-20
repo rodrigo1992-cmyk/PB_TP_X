@@ -51,5 +51,5 @@ app.include_router(router)
 if __name__ == "__main__":
     #webscrapping_catho()
     #webscrapping_indeed()
-    dataPreProcessing()
+    #dataPreProcessing()
     #uvicorn.run(app, host="0.0.0.0", port=8000)
