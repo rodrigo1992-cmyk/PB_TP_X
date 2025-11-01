@@ -49,7 +49,7 @@ def validar_input(input_sentence):
         key_gemini = os.getenv('GEMINI_KEY')
 
         genai.configure(api_key=key_gemini)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("models/gemini-2.5-flash")
         response = model.generate_content(prompt)
 
         response_text = response.text.replace('\n', '')
@@ -182,7 +182,7 @@ def formatar_output(output_content):
         key_gemini = os.getenv('GEMINI_KEY')
 
         genai.configure(api_key=key_gemini)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("models/gemini-2.5-flash")
         response = model.generate_content(prompt)
 
         return {"success": response.text}
